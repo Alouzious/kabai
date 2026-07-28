@@ -4,9 +4,9 @@ import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 export default function IndabaXFooter() {
   return (
     <footer className="bg-indabax-black text-white pt-16 pb-8 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center sm:text-left items-start justify-items-center sm:justify-items-start">
+        <div className="max-w-xs sm:max-w-none">
+          <div className="flex items-center gap-3 mb-4 justify-center sm:justify-start">
             <img
               src="/indabax.png"
               alt="IndabaX Kabale"
@@ -19,7 +19,7 @@ export default function IndabaXFooter() {
           <p className="text-sm text-white/50">
             The AI community track of KAB AI at Kabale University.
           </p>
-          <div className="flex gap-3 mt-4">
+          <div className="flex gap-3 mt-4 justify-center sm:justify-start">
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaTwitter size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaLinkedin size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaGithub size={16} /></a>
@@ -48,7 +48,7 @@ export default function IndabaXFooter() {
         <div>
           <h4 className="font-bold uppercase tracking-wide text-sm mb-3 border-b border-indabax-green inline-block pb-1">Contact Info</h4>
           <p className="text-sm text-white/60 mt-2">Kabale University, Kabale, Uganda</p>
-          <p className="text-sm text-white/60 mt-1">indabax@kab.ac.ug</p>
+          <p className="text-sm text-white/60 mt-1">indabaxkabale@gmail.com</p>
         </div>
       </div>
 
