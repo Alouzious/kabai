@@ -47,7 +47,6 @@ export default function Navbar() {
             {communitiesOpen && (
               <div className="absolute top-full left-0 bg-white text-charcoal rounded-lg shadow-xl py-2 w-56">
                 <Link to="/indabax" className="block px-4 py-2 hover:bg-cream text-sm">IndabaX AI Club</Link>
-                <Link to="/committees" className="block px-4 py-2 hover:bg-cream text-sm">Committees</Link>
               </div>
             )}
           </div>

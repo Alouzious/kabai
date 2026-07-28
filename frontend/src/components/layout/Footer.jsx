@@ -4,15 +4,15 @@ import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 export default function Footer() {
   return (
     <footer className="bg-charcoal text-white pt-16 pb-8 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        <div>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center sm:text-left items-start justify-items-center sm:justify-items-start">
+        <div className="max-w-xs sm:max-w-none">
           <h3 className="font-display font-bold text-xl mb-2">
             KAB <span className="text-accent">AI</span>
           </h3>
           <p className="text-sm text-white/60">
             Advancing AI education and community-driven innovation at Kabale University.
           </p>
-          <div className="flex gap-3 mt-4">
+          <div className="flex gap-3 mt-4 justify-center sm:justify-start">
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaTwitter size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaLinkedin size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaGithub size={16} /></a>
