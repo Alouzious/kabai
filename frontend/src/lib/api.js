@@ -1,20 +1,28 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://kabai-c2ox.onrender.com/api/v1",
-  // baseURL: "https://kabai.onrender.com/api/v1",
-  // baseURL: "http://localhost:8000/api/v1",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1",
+  withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("kabai_token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+let onUnauthorized = null;
+export function setOnUnauthorized(cb) {
+  onUnauthorized = cb;
+}
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401 && onUnauthorized) {
+      onUnauthorized();
+    }
+    return Promise.reject(err);
+  },
+);
 
 export const loginRequest = (email, password) =>
   api.post("/auth/login", { email, password });
+
+export const logoutRequest = () => api.post("/auth/logout");
 
 export default api;

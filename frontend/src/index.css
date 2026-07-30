@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors — Kabale University blue & gold identity */
-  --color-charcoal: #123F73;       /* KAB deep blue — navbar, footer, dark sections */
-  --color-charcoal-light: #1D5FA0; /* KAB medium blue — hover states, secondary bg */
-  --color-accent: #F2B705;         /* KAB gold — buttons, links, highlights */
-  --color-accent-light: #FFCB3D;   /* lighter gold — hover states */
-  --color-cream: #FFFFFF;          /* clean white background */
-  --color-cream-dark: #F0EAD6;     /* soft warm off-white for section breaks */
+  /* Brand Colors — Kabale University official brand */
+  --color-charcoal: #0072BB;       /* Royal Blue — navbar, footer, primary buttons */
+  --color-charcoal-light: #33A0E0; /* lighter blue — hover states, secondary bg */
+  --color-accent: #F6EE25;         /* Bright Yellow — badges, links, callout elements */
+  --color-accent-light: #FFF176;   /* lighter yellow — hover states */
+  --color-cream: #FFFFFF;          /* Clean white — primary content background */
+  --color-cream-dark: #F8F9FA;     /* Light Gray — secondary section card backgrounds */
 
-  /* Supporting neutrals (grays only, no other hues) */
-  --color-text-body: #4B4B5A;
-  --color-border-soft: #E8E4DD;
+  /* Supporting neutrals */
+  --color-text-body: #000000;      /* Pure Black — main body typography */
+  --color-border-soft: #DEE2E6;
 
   /* IndabaX sub-site palette stays untouched — its own green/black/white brand */
   --color-indabax-green: #00D26A;
@@ -19,13 +19,14 @@
   --color-indabax-black: #0A0A0A;
   --color-indabax-black-light: #1A1A1A;
 
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-display: "Roboto Condensed", sans-serif;
+  --font-body: "Poppins", sans-serif;
+  --font-brand: "Oswald", sans-serif;
 }
 
 body {
   font-family: var(--font-body);
-  color: var(--color-charcoal);
+  color: var(--color-text-body);
 }
 
 h1, h2, h3, h4, h5, h6 {

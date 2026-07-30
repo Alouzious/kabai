@@ -15,9 +15,17 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, checking, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-charcoal">
+        <div className="text-cream font-display text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;

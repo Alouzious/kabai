@@ -17,24 +17,24 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 shadow-lg shadow-black/10">
-      <div className="hidden md:flex bg-accent text-charcoal text-xs font-medium px-6 py-1.5 items-center justify-between">
-        <div className="flex items-center gap-5">
-          <span className="flex items-center gap-1.5"><Mail size={12} /> kabai@kab.ac.ug</span>
-          <span className="flex items-center gap-1.5"><Phone size={12} /> Kabale University</span>
+    <header className="sticky top-0 z-50">
+      <div className="hidden md:flex bg-accent text-charcoal px-6 py-1 items-center justify-between" style={{ minHeight: '30px' }}>
+        <div className="flex items-center gap-8">
+          <span className="flex items-center gap-1.5 font-display text-[14px] leading-none text-black"><Mail size={13} /> kabai@kab.ac.ug</span>
+          <span className="flex items-center gap-1.5 font-display text-[14px] leading-none text-black"><Phone size={13} /> (+256) 782 860 259</span>
         </div>
-        <span className="tracking-wide uppercase text-[11px]">KAB AI · Kabale University</span>
+        <span className="font-display text-[14px] leading-none tracking-wide uppercase text-[#0072BB]">KAB AI · Kabale University</span>
       </div>
 
-      <div className="bg-charcoal text-white border-b border-white/10">
+      <div className="bg-charcoal text-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20 md:h-24">
           <Link to="/" className="flex items-center gap-3">
-            <div className="font-display font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight leading-none">
+            <div className="font-brand font-bold text-xl sm:text-2xl md:text-3xl tracking-wider leading-none">
               KAB <span className="text-accent">AI</span>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[14px] lg:text-[15px] font-medium">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[14px] lg:text-[15px] font-medium font-display">
             <Link to="/" className="hover:text-accent transition">Home</Link>
             <Link to="/about" className="hover:text-accent transition">About</Link>
 
@@ -91,6 +91,11 @@ export default function Navbar() {
           <button className="md:hidden p-1" onClick={() => setOpen(!open)} aria-label="Toggle menu">
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
+        </div>
+        <div className="absolute bottom-0 left-0 w-full leading-none overflow-hidden pointer-events-none" style={{ height: '10px', transform: 'translateY(100%)' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 10" preserveAspectRatio="none" className="w-full h-full">
+            <path d="M0,10 Q500,-4 1000,10" fill="none" stroke="#FDC854" strokeWidth="10"/>
+          </svg>
         </div>
       </div>
 
