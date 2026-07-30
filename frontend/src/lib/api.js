@@ -13,4 +13,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+export const loginRequest = (email, password) =>
+  api.post("/auth/login", { email, password });
+
 export default api;
