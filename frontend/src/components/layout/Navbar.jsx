@@ -23,7 +23,7 @@ export default function Navbar() {
           <span className="flex items-center gap-1.5"><Mail size={12} /> kabai@kab.ac.ug</span>
           <span className="flex items-center gap-1.5"><Phone size={12} /> Kabale University</span>
         </div>
-        <span className="tracking-wide uppercase text-[11px]">KAB-AI · Kabale University</span>
+        <span className="tracking-wide uppercase text-[11px]">IndabaX AI Club · Kabale University</span>
       </div>
 
       <div className="bg-charcoal text-white border-b border-white/10">
@@ -34,11 +34,10 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-10 text-[15px] font-medium">
+          <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-[15px] font-medium">
             <Link to="/" className="hover:text-accent transition">Home</Link>
             <Link to="/about" className="hover:text-accent transition">About</Link>
 
-            {/* Our Work — mega dropdown, 2 columns */}
             <div className="relative" onMouseEnter={() => setWorkOpen(true)} onMouseLeave={() => setWorkOpen(false)}>
               <button className="flex items-center gap-1 hover:text-accent transition">
                 Our Work <ChevronDown size={14} />
@@ -71,6 +70,8 @@ export default function Navbar() {
               )}
             </div>
 
+            <Link to="/blog" className="hover:text-accent transition">Blog</Link>
+
             <div className="relative" onMouseEnter={() => setCommunitiesOpen(true)} onMouseLeave={() => setCommunitiesOpen(false)}>
               <button className="flex items-center gap-1 hover:text-accent transition">
                 Communities <ChevronDown size={14} />
@@ -99,6 +100,7 @@ export default function Navbar() {
           <Link to="/about" onClick={() => setOpen(false)}>About</Link>
           <Link to="/projects" onClick={() => setOpen(false)}>Projects</Link>
           <Link to="/research" onClick={() => setOpen(false)}>Publications</Link>
+          <Link to="/blog" onClick={() => setOpen(false)}>Blog</Link>
           <Link to="/team" onClick={() => setOpen(false)}>Team</Link>
           <Link to="/indabax" onClick={() => setOpen(false)}>IndabaX AI Club</Link>
           <Link to="/contact" onClick={() => setOpen(false)} className="text-accent font-semibold">Join Us</Link>

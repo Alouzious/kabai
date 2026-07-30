@@ -7,6 +7,9 @@ import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import ResearchPage from "./pages/ResearchPage";
+import BlogPage from "./pages/BlogPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
+import TeamPage from "./pages/TeamPage";
 import ContactPage from "./pages/ContactPage";
 
 import IndabaXHomePage from "./pages/indabax/IndabaXHomePage";
@@ -26,6 +29,9 @@ function App() {
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/projects/:slug" element={<ProjectDetailPage />} />
           <Route path="/research" element={<ResearchPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogDetailPage />} />
+          <Route path="/team" element={<TeamPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Route>
 
