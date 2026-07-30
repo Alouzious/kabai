@@ -18,13 +18,13 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-accent px-6 py-14 md:py-16">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+    <section className="bg-accent px-4 sm:px-6 py-10 sm:py-14 md:py-16">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
         <div className="text-center md:text-left">
-          <p className="text-charcoal font-bold tracking-wide text-xs md:text-sm mb-2 uppercase">
+          <p className="text-charcoal font-bold tracking-wide text-xs mb-2 uppercase">
             Subscribe to Our Newsletter
           </p>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">
+          <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-charcoal mb-2 leading-snug">
             Get Updates on News, Events &amp; Opportunities
           </h2>
           <p className="text-charcoal/70 text-sm md:text-base">
@@ -39,7 +39,7 @@ export default function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email Address"
-            className="w-full sm:w-72 px-4 py-3 rounded-lg text-charcoal placeholder-charcoal/50 bg-white outline-none focus:ring-2 focus:ring-charcoal/30"
+            className="w-full sm:w-64 md:w-72 px-4 py-3 rounded-lg text-charcoal placeholder-charcoal/50 bg-white outline-none focus:ring-2 focus:ring-charcoal/30 text-sm sm:text-base"
           />
           <button
             type="submit"

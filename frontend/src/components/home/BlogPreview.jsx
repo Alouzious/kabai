@@ -23,18 +23,18 @@ export default function BlogPreview() {
   if (posts.length === 0) return null;
 
   return (
-    <section className="px-6 py-24 max-w-7xl mx-auto">
+    <section className="px-4 sm:px-6 py-16 sm:py-24 max-w-7xl mx-auto">
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={fadeUp}
-        className="text-center mb-14"
+        className="text-center mb-10 sm:mb-14"
       >
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-charcoal">Latest Posts</h2>
+        <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-charcoal">Latest Posts</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {posts.map((p, i) => (
           <motion.article
             key={p.id}
@@ -46,17 +46,17 @@ export default function BlogPreview() {
             className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
           >
             {p.cover_image_url && (
-              <div className="h-44 overflow-hidden">
+              <div className="h-40 sm:h-44 overflow-hidden">
                 <img src={p.cover_image_url} alt={p.title} className="w-full h-full object-cover" />
               </div>
             )}
-            <div className="p-5">
+            <div className="p-4 sm:p-5">
               {p.published_at && (
                 <p className="text-accent text-xs font-semibold mb-2">
                   {new Date(p.published_at).toLocaleDateString()}
                 </p>
               )}
-              <h3 className="font-display font-bold text-lg mb-2">{p.title}</h3>
+              <h3 className="font-display font-bold text-base sm:text-lg mb-2">{p.title}</h3>
               <p className="text-sm text-text-body line-clamp-2 mb-4">{p.excerpt}</p>
               <Link to={`/blog/${p.slug}`} className="text-accent font-semibold text-sm hover:text-accent-light transition-colors">
                 Read more

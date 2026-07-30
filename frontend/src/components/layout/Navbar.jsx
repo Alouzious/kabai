@@ -71,8 +71,6 @@ export default function Navbar() {
               )}
             </div>
 
-            <Link to="/team" className="hover:text-accent transition">Team</Link>
-
             <div className="relative" onMouseEnter={() => setCommunitiesOpen(true)} onMouseLeave={() => setCommunitiesOpen(false)}>
               <button className="flex items-center gap-1 hover:text-accent transition">
                 Communities <ChevronDown size={14} />

@@ -13,9 +13,9 @@ export default function Partners() {
   if (partners.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-24 bg-cream-dark/40">
-      <div className="max-w-3xl mx-auto text-center px-6 mb-14">
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-charcoal mb-4">
+    <section className="py-16 sm:py-20 md:py-24 bg-cream-dark/40">
+      <div className="max-w-3xl mx-auto text-center px-4 sm:px-6 mb-10 sm:mb-14">
+        <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-charcoal mb-3 sm:mb-4">
           Partners &amp; Collaborators
         </h2>
         <p className="text-text-body text-sm md:text-base leading-relaxed">
@@ -24,8 +24,8 @@ export default function Partners() {
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 md:gap-10">
           {partners.map((p) => (
             <a
               key={p.id}
@@ -33,7 +33,7 @@ export default function Partners() {
               target={p.website_url ? "_blank" : undefined}
               rel="noreferrer"
               title={p.name}
-              className="flex items-center justify-center h-28 md:h-32 px-4"
+              className="flex items-center justify-center h-20 sm:h-28 md:h-32 px-2 sm:px-4"
             >
               <img
                 src={p.logo_url}
@@ -44,7 +44,7 @@ export default function Partners() {
                   e.currentTarget.nextSibling.style.display = "block";
                 }}
               />
-              <span className="hidden text-base font-semibold text-charcoal text-center">{p.name}</span>
+              <span className="hidden text-sm sm:text-base font-semibold text-charcoal text-center">{p.name}</span>
             </a>
           ))}
         </div>
