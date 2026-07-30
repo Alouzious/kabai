@@ -1,16 +1,19 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
 from app.crud import newsletter as crud
 from app.db.session import get_db
 from app.schemas.newsletter import NewsletterSubscribeIn, NewsletterOut
 from app.api.deps import get_current_super_admin
+from app.core.config import settings
+from app.core.limiter import limiter
 
 router = APIRouter(prefix="/api/v1/newsletter", tags=["newsletter"])
 
 
 @router.post("/subscribe", response_model=NewsletterOut)
-def subscribe(sub_in: NewsletterSubscribeIn, db: Session = Depends(get_db)):
+@limiter.limit(settings.NEWSLETTER_RATE_LIMIT)
+def subscribe(request: Request, sub_in: NewsletterSubscribeIn, db: Session = Depends(get_db)):
     return crud.subscribe(db, sub_in)
 
 

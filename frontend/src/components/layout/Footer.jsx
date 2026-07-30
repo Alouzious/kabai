@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="bg-charcoal text-white pt-12 sm:pt-16 pb-6 sm:pb-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 text-center sm:text-left items-start justify-items-center sm:justify-items-start">
         <div className="max-w-xs sm:max-w-none">
-          <h3 className="font-display font-bold text-lg sm:text-xl mb-2">
+          <h3 className="font-brand font-bold text-lg sm:text-xl mb-2 tracking-wider">
             KAB <span className="text-accent">AI</span>
           </h3>
           <p className="text-sm text-white/60">
