@@ -7,3 +7,7 @@ from app.models.gallery import GalleryImage
 from app.models.learning_resource import LearningResource
 from app.models.partner import Partner
 from app.models.newsletter import NewsletterSubscriber
+from app.models.category import Category
+from app.models.slide import Slide
+from app.models.core_value import CoreValue
+from app.models.blog_post import BlogPost

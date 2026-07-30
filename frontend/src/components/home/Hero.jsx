@@ -1,97 +1,131 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../lib/api";
 
-const SLIDES = [
-  {
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1600&auto=format&fit=crop",
-    title: "Building AI Skills for the Next Generation",
-    subtitle:
-      "KAB AI is a student-led community advancing artificial intelligence education, research and innovation at Kabale University and beyond.",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop",
-    title: "Learning Through Hands-On Projects",
-    subtitle:
-      "From machine learning to data science, our members build real solutions to real problems facing our community.",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop",
-    title: "A Community of Builders and Innovators",
-    subtitle:
-      "Workshops, hackathons and mentorship join a growing network of students shaping the future of AI in Africa.",
-  },
-];
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
+
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+  });
+}
 
 export default function Hero() {
+  const [slides, setSlides] = useState([]);
+  const [ready, setReady] = useState(false);
   const [index, setIndex] = useState(0);
+  const mounted = useRef(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timer);
+    mounted.current = true;
+
+    // Preload the fallback itself too, so even the "loading" state shows a fully-loaded image
+    preloadImage(FALLBACK_IMAGE);
+
+    api
+      .get("/slides/", { params: { site: "main" } })
+      .then(async (res) => {
+        const data = res.data || [];
+        if (data.length === 0) {
+          if (mounted.current) setReady(true);
+          return;
+        }
+
+        await Promise.all(data.map((s) => preloadImage(s.image_url)));
+
+        if (mounted.current) {
+          setSlides(data);
+          setReady(true);
+        }
+      })
+      .catch(() => {
+        if (mounted.current) setReady(true);
+      });
+
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slides]);
+
+  const next = () => setIndex((prev) => (prev + 1) % slides.length);
+  const prev = () => setIndex((prev) => (prev - 1 + slides.length) % slides.length);
+
+  const showFallback = !ready || slides.length === 0;
+
   return (
-    <section className="relative text-white px-6 py-28 md:py-36 text-center overflow-hidden min-h-[560px] flex items-center">
-      {SLIDES.map((slide, i) => (
-        <div
-          key={slide.image}
-          className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
-            i === index ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-        >
-          <div
-            className={`absolute inset-0 bg-cover bg-center ${
-              i === index ? "animate-zoomfade" : ""
-            }`}
-            style={{ backgroundImage: `url(${slide.image})` }}
+    <section className="w-full">
+      <div className="relative w-full h-[75vh] md:h-[85vh] overflow-hidden bg-charcoal">
+        {showFallback && (
+          <img
+            src={FALLBACK_IMAGE}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
           />
-        </div>
-      ))}
+        )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/90 via-charcoal/80 to-charcoal z-10" />
-
-      <div className="max-w-4xl mx-auto relative z-20 w-full">
-        {SLIDES.map((slide, i) => (
-          <div
-            key={slide.title}
-            className={`transition-all duration-700 ${
-              i === index
-                ? "opacity-100 translate-y-0 relative"
-                : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
-            }`}
-          >
-            <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight mb-6">
-              {slide.title}
-            </h1>
-            <p className="text-white/70 max-w-2xl mx-auto mb-8 leading-relaxed">
-              {slide.subtitle}
-            </p>
-          </div>
-        ))}
-
-        <div className="flex gap-4 justify-center flex-wrap mt-2">
-          <Link to="/contact" className="bg-accent px-6 py-3 rounded-lg font-semibold hover:bg-accent-light transition">
-            Join Us
-          </Link>
-          <Link to="/projects" className="border border-white/30 px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition">
-            See Our Work
-          </Link>
-        </div>
-
-        <div className="flex justify-center gap-2 mt-10">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              className={`h-2 rounded-full transition-all ${
-                i === index ? "bg-accent w-8" : "bg-white/30 w-2"
+        {!showFallback &&
+          slides.map((slide, i) => (
+            <img
+              key={slide.id}
+              src={slide.image_url}
+              alt={slide.caption || ""}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${
+                i === index ? "opacity-100" : "opacity-0"
               }`}
             />
           ))}
-        </div>
+
+        {!showFallback && slides.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-charcoal/60 hover:bg-accent text-white p-2 rounded-full transition"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-charcoal/60 hover:bg-accent text-white p-2 rounded-full transition"
+            >
+              <ChevronRight size={22} />
+            </button>
+
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setIndex(i)}
+                  className={`h-2 rounded-full transition-all ${
+                    i === index ? "bg-accent w-8" : "bg-white/60 w-2"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
+
+      {!showFallback && slides[index]?.caption && (
+        <div className="bg-charcoal text-white px-6 py-6 md:py-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-white/80 text-sm md:text-base italic leading-relaxed">
+              {slides[index].caption}
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

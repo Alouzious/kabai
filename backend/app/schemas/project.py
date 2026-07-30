@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel, ConfigDict
+from app.schemas.category import CategoryOut
 
 
 class ProjectBase(BaseModel):
@@ -16,6 +17,7 @@ class ProjectBase(BaseModel):
     github_url: Optional[str] = None
     live_url: Optional[str] = None
     research_paper_id: Optional[uuid.UUID] = None
+    category_id: Optional[uuid.UUID] = None
     status: str = "ongoing"
 
 
@@ -31,11 +33,13 @@ class ProjectUpdate(BaseModel):
     tech_stack: Optional[List[str]] = None
     github_url: Optional[str] = None
     live_url: Optional[str] = None
+    category_id: Optional[uuid.UUID] = None
     status: Optional[str] = None
 
 
 class ProjectOut(ProjectBase):
     id: uuid.UUID
+    category: Optional[CategoryOut] = None
     created_at: datetime
     updated_at: datetime
 

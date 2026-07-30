@@ -19,6 +19,10 @@ from app.api.routes import (
     partners,
     newsletter,
     uploads,
+    categories,
+    slides,
+    core_values,
+    blog,
 )
 
 logging.basicConfig(
@@ -69,6 +73,10 @@ app.include_router(learning.router)
 app.include_router(partners.router)
 app.include_router(newsletter.router)
 app.include_router(uploads.router)
+app.include_router(categories.router)
+app.include_router(slides.router)
+app.include_router(core_values.router)
+app.include_router(blog.router)
 
 
 @app.on_event("startup")

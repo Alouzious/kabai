@@ -12,52 +12,43 @@ export default function Partners() {
 
   if (partners.length === 0) return null;
 
-  // Duplicate the list so the marquee loops seamlessly
-  const track = [...partners, ...partners];
-
   return (
-    <section className="py-20 overflow-hidden">
-      <p className="text-accent font-semibold tracking-widest text-sm mb-10 text-center">OUR PARTNERS</p>
+    <section className="py-20 md:py-24 bg-cream-dark/40">
+      <div className="max-w-3xl mx-auto text-center px-6 mb-14">
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-charcoal mb-4">
+          Partners &amp; Collaborators
+        </h2>
+        <p className="text-text-body text-sm md:text-base leading-relaxed">
+          We work alongside universities, foundations and institutions advancing
+          research, innovation and academic excellence across Africa and beyond.
+        </p>
+      </div>
 
-      <div className="relative w-full overflow-hidden group">
-        {/* fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10" />
-
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
-          {track.map((p, i) => (
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10">
+          {partners.map((p) => (
             <a
-              key={`${p.id}-${i}`}
+              key={p.id}
               href={p.website_url || "#"}
               target={p.website_url ? "_blank" : undefined}
               rel="noreferrer"
               title={p.name}
-              className="mx-6 flex items-center justify-center shrink-0 w-40 h-40"
+              className="flex items-center justify-center h-28 md:h-32 px-4"
             >
               <img
                 src={p.logo_url}
                 alt={p.name}
-                className="w-full h-full object-contain hover:scale-105 transition-transform"
+                className="max-w-full max-h-full object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                   e.currentTarget.nextSibling.style.display = "block";
                 }}
               />
-              <span className="hidden text-lg font-semibold text-charcoal">{p.name}</span>
+              <span className="hidden text-base font-semibold text-charcoal text-center">{p.name}</span>
             </a>
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 25s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }

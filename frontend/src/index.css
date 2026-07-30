@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors - exactly 3, used consistently everywhere */
-  --color-charcoal: #1A1A2E;
-  --color-charcoal-light: #2D2D44;
-  --color-accent: #FF5A1F;
-  --color-accent-light: #FF7A47;
-  --color-cream: #FFF3E0;
-  --color-cream-dark: #FFE0B2;
+  /* Brand Colors — Kabale University blue & gold identity */
+  --color-charcoal: #123F73;       /* KAB deep blue — navbar, footer, dark sections */
+  --color-charcoal-light: #1D5FA0; /* KAB medium blue — hover states, secondary bg */
+  --color-accent: #F2B705;         /* KAB gold — buttons, links, highlights */
+  --color-accent-light: #FFCB3D;   /* lighter gold — hover states */
+  --color-cream: #FFFFFF;          /* clean white background */
+  --color-cream-dark: #F0EAD6;     /* soft warm off-white for section breaks */
 
   /* Supporting neutrals (grays only, no other hues) */
   --color-text-body: #4B4B5A;
   --color-border-soft: #E8E4DD;
 
-  /* IndabaX sub-site palette - green, black, white */
+  /* IndabaX sub-site palette stays untouched — its own green/black/white brand */
   --color-indabax-green: #00D26A;
   --color-indabax-green-dark: #00A855;
   --color-indabax-black: #0A0A0A;
@@ -33,17 +33,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes zoomfade {
-  0% {
-    transform: scale(1.15);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1.25);
-  }
+  0% { transform: scale(1.15); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1.25); }
 }
-
 .animate-zoomfade {
   animation: zoomfade 6s ease-in-out forwards;
 }

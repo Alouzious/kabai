@@ -1,9 +1,8 @@
 import Hero from "../components/home/Hero";
 import AboutPreview from "../components/home/AboutPreview";
-import WorkPreview from "../components/home/WorkPreview";
-import EventsPreview from "../components/home/EventsPreview";
-import TeamPreview from "../components/home/TeamPreview";
+import CoreValues from "../components/home/CoreValues";
 import Partners from "../components/home/Partners";
+import BlogPreview from "../components/home/BlogPreview";
 import Newsletter from "../components/home/Newsletter";
 
 export default function HomePage() {
@@ -11,10 +10,9 @@ export default function HomePage() {
     <>
       <Hero />
       <AboutPreview />
-      <WorkPreview />
-      <EventsPreview />
-      <TeamPreview />
+      <CoreValues />
       <Partners />
+      <BlogPreview />
       <Newsletter />
     </>
   );

@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, String, Text, DateTime, ARRAY, Boolean
+from sqlalchemy import Column, String, Text, DateTime, ARRAY, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
@@ -21,7 +22,10 @@ class Project(Base):
     github_url = Column(String, nullable=True)
     live_url = Column(String, nullable=True)
     research_paper_id = Column(UUID(as_uuid=True), nullable=True)
+    category_id = Column(UUID(as_uuid=True), ForeignKey("categories.id"), nullable=True)
     status = Column(String, default="ongoing")
     is_deleted = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    category = relationship("Category", lazy="joined")
