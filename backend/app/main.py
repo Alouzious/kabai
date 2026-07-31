@@ -33,7 +33,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("kabai")
 
-limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
