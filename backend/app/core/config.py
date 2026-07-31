@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str
     CLOUDINARY_API_SECRET: str
 
+    LOGIN_RATE_LIMIT: str = "5/minute"
+    NEWSLETTER_RATE_LIMIT: str = "3/minute"
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     @property
