@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import gallery as crud
 from app.db.session import get_db
 from app.schemas.gallery import GalleryImageCreate, GalleryImageOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/gallery", tags=["gallery"])
 
@@ -22,14 +22,14 @@ def list_images(
 
 @router.post("/", response_model=GalleryImageOut)
 def upload_image(
-    image_in: GalleryImageCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    image_in: GalleryImageCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_gallery_image(db, image_in)
 
 
 @router.delete("/{image_id}")
 def delete_image(
-    image_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    image_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     crud.delete_gallery_image(db, image_id)
     return {"message": "Image deleted"}

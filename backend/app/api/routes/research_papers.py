@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import research_paper as crud
 from app.db.session import get_db
 from app.schemas.research_paper import ResearchPaperCreate, ResearchPaperOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/research-papers", tags=["research_papers"])
 
@@ -23,14 +23,14 @@ def list_papers(
 
 @router.post("/", response_model=ResearchPaperOut)
 def create_paper(
-    paper_in: ResearchPaperCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    paper_in: ResearchPaperCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_paper(db, paper_in)
 
 
 @router.delete("/{paper_id}")
 def delete_paper(
-    paper_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    paper_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     paper = crud.get_paper(db, paper_id)
     if not paper:

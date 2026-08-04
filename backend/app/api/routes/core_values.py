@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import core_value as crud
 from app.db.session import get_db
 from app.schemas.core_value import CoreValueCreate, CoreValueUpdate, CoreValueOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/core-values", tags=["core_values"])
 
@@ -17,14 +17,14 @@ def list_core_values(site: str = None, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=CoreValueOut)
 def create_core_value(
-    value_in: CoreValueCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    value_in: CoreValueCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_core_value(db, value_in)
 
 
 @router.put("/{value_id}", response_model=CoreValueOut)
 def update_core_value(
-    value_id: uuid.UUID, value_in: CoreValueUpdate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    value_id: uuid.UUID, value_in: CoreValueUpdate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     value = crud.get_core_value(db, value_id)
     if not value:
@@ -34,7 +34,7 @@ def update_core_value(
 
 @router.delete("/{value_id}")
 def delete_core_value(
-    value_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    value_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     value = crud.get_core_value(db, value_id)
     if not value:

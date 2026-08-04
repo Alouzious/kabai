@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import learning_resource as crud
 from app.db.session import get_db
 from app.schemas.learning_resource import LearningResourceCreate, LearningResourceOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/learning", tags=["learning"])
 
@@ -23,14 +23,14 @@ def list_resources(
 
 @router.post("/", response_model=LearningResourceOut)
 def create_resource(
-    resource_in: LearningResourceCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    resource_in: LearningResourceCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_resource(db, resource_in)
 
 
 @router.delete("/{resource_id}")
 def delete_resource(
-    resource_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    resource_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     crud.delete_resource(db, resource_id)
     return {"message": "Resource deleted"}

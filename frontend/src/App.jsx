@@ -53,6 +53,7 @@ function App() {
             <Route path="/indabax" element={<IndabaXHomePage />} />
             <Route path="/indabax/about" element={<IndabaXAboutPage />} />
             <Route path="/indabax/projects" element={<ProjectsPage />} />
+            <Route path="/indabax/projects/:slug" element={<ProjectDetailPage />} />
             <Route path="/indabax/team" element={<IndabaXTeamPage />} />
             <Route path="/indabax/gallery" element={<IndabaXGalleryPage />} />
             <Route path="/indabax/learning" element={<IndabaXLearningPage />} />

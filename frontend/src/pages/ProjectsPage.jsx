@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import api from "../lib/api";
 
@@ -14,6 +14,8 @@ const fadeUp = {
 
 export default function ProjectsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const isIndabaX = location.pathname.startsWith("/indabax");
   const activeCategory = searchParams.get("category");
 
   const [projects, setProjects] = useState([]);
@@ -44,9 +46,9 @@ export default function ProjectsPage() {
 
   return (
     <div className="bg-white">
-      <div className="bg-charcoal text-white px-4 sm:px-6 py-16 sm:py-20 text-center">
+      <div className={`${isIndabaX ? "bg-indabax-black" : "bg-charcoal"} text-white px-4 sm:px-6 py-16 sm:py-20 text-center`}>
         <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-          <p className="text-accent font-semibold tracking-widest text-xs sm:text-sm mb-3 uppercase">Our Work</p>
+          <p className={`${isIndabaX ? "text-indabax-green" : "text-accent"} font-semibold tracking-widest text-xs sm:text-sm mb-3 uppercase`}>Our Work</p>
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Projects</h1>
           <p className="text-white/60 max-w-xl mx-auto text-sm sm:text-base">
             A look at what KAB AI members have been building, from data science tools to full AI-powered platforms.
@@ -60,7 +62,13 @@ export default function ProjectsPage() {
             <button
               onClick={() => setCategory(null)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                !activeCategory ? "bg-accent text-charcoal" : "bg-cream text-charcoal hover:bg-cream-dark"
+                !activeCategory
+                  ? isIndabaX
+                    ? "bg-indabax-green text-indabax-black"
+                    : "bg-accent text-charcoal"
+                  : isIndabaX
+                    ? "bg-indabax-black-light text-white hover:bg-indabax-green-dark"
+                    : "bg-cream text-charcoal hover:bg-cream-dark"
               }`}
             >
               All Projects
@@ -70,7 +78,13 @@ export default function ProjectsPage() {
                 key={c.id}
                 onClick={() => setCategory(c.slug)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                  activeCategory === c.slug ? "bg-accent text-charcoal" : "bg-cream text-charcoal hover:bg-cream-dark"
+                  activeCategory === c.slug
+                    ? isIndabaX
+                      ? "bg-indabax-green text-indabax-black"
+                      : "bg-accent text-charcoal"
+                    : isIndabaX
+                      ? "bg-indabax-black-light text-white hover:bg-indabax-green-dark"
+                      : "bg-cream text-charcoal hover:bg-cream-dark"
                 }`}
               >
                 {c.name}
@@ -120,15 +134,23 @@ export default function ProjectsPage() {
                 )}
                 <div className="p-5 flex flex-col flex-1">
                   {p.category && (
-                    <span className="inline-block w-fit bg-cream text-charcoal text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+                    <span
+                      className={`inline-block w-fit ${
+                        isIndabaX ? "bg-indabax-black-light text-indabax-green" : "bg-cream text-charcoal"
+                      } text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3`}
+                    >
                       {p.category.name}
                     </span>
                   )}
                   <h3 className="font-display font-bold text-lg mb-2">{p.title}</h3>
                   <p className="text-sm text-text-body line-clamp-2 mb-5 flex-1">{p.abstract}</p>
                   <Link
-                    to={`/projects/${p.slug}`}
-                    className="inline-flex items-center gap-1 text-accent font-semibold text-sm transition-colors hover:text-accent-light w-fit"
+                    to={`${isIndabaX ? "/indabax" : ""}/projects/${p.slug}`}
+                    className={`inline-flex items-center gap-1 font-semibold text-sm transition-colors w-fit ${
+                      isIndabaX
+                        ? "text-indabax-green hover:text-indabax-green-dark"
+                        : "text-accent hover:text-accent-light"
+                    }`}
                   >
                     Learn more →
                   </Link>

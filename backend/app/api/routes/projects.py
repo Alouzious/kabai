@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import project as crud
 from app.db.session import get_db
 from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
 
@@ -30,7 +30,7 @@ def get_project(slug: str, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=ProjectOut)
 def create_project(
-    project_in: ProjectCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    project_in: ProjectCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     if crud.get_project_by_slug(db, project_in.slug):
         raise HTTPException(status_code=400, detail="Slug already exists")
@@ -42,7 +42,7 @@ def update_project(
     project_id: uuid.UUID,
     project_in: ProjectUpdate,
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_current_super_admin),
 ):
     project = crud.get_project(db, project_id)
     if not project:
@@ -52,7 +52,7 @@ def update_project(
 
 @router.delete("/{project_id}")
 def delete_project(
-    project_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    project_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     project = crud.get_project(db, project_id)
     if not project:

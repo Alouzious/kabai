@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import event as crud
 from app.db.session import get_db
 from app.schemas.event import EventCreate, EventUpdate, EventOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/events", tags=["events"])
 
@@ -23,7 +23,7 @@ def list_events(
 
 @router.post("/", response_model=EventOut)
 def create_event(
-    event_in: EventCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    event_in: EventCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_event(db, event_in)
 
@@ -33,7 +33,7 @@ def update_event(
     event_id: uuid.UUID,
     event_in: EventUpdate,
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_current_super_admin),
 ):
     event = crud.get_event(db, event_id)
     if not event:
@@ -43,7 +43,7 @@ def update_event(
 
 @router.delete("/{event_id}")
 def delete_event(
-    event_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    event_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     event = crud.get_event(db, event_id)
     if not event:

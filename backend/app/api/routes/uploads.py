@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 
 from app.core.cloudinary_client import upload_file
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/uploads", tags=["uploads"])
 
@@ -27,7 +27,7 @@ def detect_image_type(data: bytes) -> str | None:
 async def upload_image(
     file: UploadFile = File(...),
     folder: str = Query("kabai", description="Cloudinary folder, e.g. 'team', 'gallery', 'projects'"),
-    _user=Depends(get_current_user),
+    _user=Depends(get_current_super_admin),
 ):
     contents = await file.read()
 

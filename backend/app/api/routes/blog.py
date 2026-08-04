@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import blog_post as crud
 from app.db.session import get_db
 from app.schemas.blog_post import BlogPostCreate, BlogPostUpdate, BlogPostOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/blog", tags=["blog"])
 
@@ -30,7 +30,7 @@ def get_post(slug: str, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=BlogPostOut)
 def create_post(
-    post_in: BlogPostCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    post_in: BlogPostCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     if crud.get_post_by_slug(db, post_in.slug):
         raise HTTPException(status_code=400, detail="Slug already exists")
@@ -39,7 +39,7 @@ def create_post(
 
 @router.put("/{post_id}", response_model=BlogPostOut)
 def update_post(
-    post_id: uuid.UUID, post_in: BlogPostUpdate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    post_id: uuid.UUID, post_in: BlogPostUpdate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     post = crud.get_post(db, post_id)
     if not post:
@@ -49,7 +49,7 @@ def update_post(
 
 @router.delete("/{post_id}")
 def delete_post(
-    post_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    post_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     post = crud.get_post(db, post_id)
     if not post:

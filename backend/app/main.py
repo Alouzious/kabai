@@ -25,6 +25,7 @@ from app.api.routes import (
     slides,
     core_values,
     blog,
+    membership,
 )
 
 logging.basicConfig(
@@ -97,6 +98,7 @@ app.include_router(categories.router)
 app.include_router(slides.router)
 app.include_router(core_values.router)
 app.include_router(blog.router)
+app.include_router(membership.router)
 
 
 @app.on_event("startup")

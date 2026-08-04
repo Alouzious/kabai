@@ -117,7 +117,7 @@ export default function IndabaXHomePage() {
       </Section>
 
       {/* What We Do (Objectives) */}
-      <Section className="bg-black text-white px-6 py-24">
+      <Section className="bg-indabax-black text-white px-6 py-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-indabax-green font-bold tracking-widest text-sm mb-4 uppercase">What We Do</p>
@@ -130,13 +130,13 @@ export default function IndabaXHomePage() {
             {OBJECTIVES.map((o, i) => (
               <div
                 key={o.title}
-                className="bg-indabax-black-light rounded-xl p-6 border border-white/10 hover:border-indabax-green transition-colors"
+                className="group bg-white rounded-xl p-6 border border-indabax-green/20 hover:bg-indabax-green hover:border-indabax-green transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer"
               >
-                <span className="text-indabax-green font-display font-black text-3xl block mb-3">
+                <span className="text-indabax-green group-hover:text-indabax-black font-display font-black text-3xl block mb-3">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-bold text-base mb-2">{o.title}</h3>
-                <p className="text-sm text-white/60 leading-relaxed">{o.text}</p>
+                <h3 className="font-bold text-base text-indabax-black mb-2">{o.title}</h3>
+                <p className="text-sm text-indabax-black/70 group-hover:text-indabax-black/80 leading-relaxed">{o.text}</p>
               </div>
             ))}
           </div>
@@ -161,13 +161,13 @@ export default function IndabaXHomePage() {
       )}
 
       {/* Join CTA */}
-      <Section className="bg-indabax-green text-indabax-black px-6 py-24 text-center">
-        <h2 className="font-display text-4xl md:text-5xl font-black mb-4 uppercase">Ready to Join?</h2>
+      <Section className="px-6 py-24 text-center">
+        <h2 className="font-display text-4xl md:text-5xl font-black mb-4 uppercase text-indabax-black">Ready to Join?</h2>
         <p className="text-indabax-black/70 mb-8 max-w-xl mx-auto text-lg font-medium">
           Any student, researcher, staff, or faculty member is welcome. Membership is
           open to all, without regard to background.
         </p>
-        <Link to="/indabax/join" className="bg-indabax-black text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indabax-black-light transition inline-block">
+        <Link to="/indabax/join" className="bg-indabax-green text-indabax-black px-8 py-4 rounded-full font-bold text-lg hover:bg-indabax-green-dark hover:text-white transition inline-block">
           Join Us
         </Link>
       </Section>

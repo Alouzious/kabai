@@ -20,7 +20,7 @@ export default function IndabaXGalleryPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
-      <p className="text-accent font-semibold tracking-widest text-sm mb-3">GALLERY</p>
+      <p className="text-indabax-green font-semibold tracking-widest text-sm mb-3">GALLERY</p>
       <h1 className="font-display text-4xl font-bold mb-12">Event Photos</h1>
 
       {events.length === 0 ? (
@@ -45,7 +45,7 @@ export default function IndabaXGalleryPage() {
       )}
 
       {lightbox && (
-        <div className="fixed inset-0 bg-charcoal/90 z-50 flex items-center justify-center px-6" onClick={() => setLightbox(null)}>
+        <div className="fixed inset-0 bg-indabax-black/90 z-50 flex items-center justify-center px-6" onClick={() => setLightbox(null)}>
           <button className="absolute top-6 right-6 text-white" onClick={() => setLightbox(null)}>
             <X size={32} />
           </button>
