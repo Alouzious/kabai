@@ -1,24 +1,20 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { loginRequest, logoutRequest, setOnUnauthorized } from "../lib/api";
-import api from "../lib/api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-  const [checking, setChecking] = useState(true);
+  const [token, setToken] = useState(localStorage.getItem("kabai_token"));
 
   useEffect(() => {
     setOnUnauthorized(() => setToken(null));
-    api.get("/auth/me")
-      .then(() => setToken("authenticated"))
-      .catch(() => setToken(null))
-      .finally(() => setChecking(false));
   }, []);
 
   async function login(email, password) {
     const res = await loginRequest(email, password);
-    setToken("authenticated");
+    const accessToken = res.data.access_token;
+    localStorage.setItem("kabai_token", accessToken);
+    setToken(accessToken);
     return res.data;
   }
 
@@ -32,7 +28,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated: !!token, checking }}>
+    <AuthContext.Provider value={{ token, login, logout, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

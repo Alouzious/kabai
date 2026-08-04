@@ -14,7 +14,34 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+let onUnauthorized = null;
+
+export const setOnUnauthorized = (callback) => {
+  onUnauthorized = callback;
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("kabai_token");
+      if (onUnauthorized) {
+        onUnauthorized();
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const loginRequest = (email, password) =>
   api.post("/auth/login", { email, password });
+
+export const logoutRequest = () => {
+  localStorage.removeItem("kabai_token");
+  if (onUnauthorized) {
+    onUnauthorized();
+  }
+  return Promise.resolve();
+};
 
 export default api;
