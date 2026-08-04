@@ -22,13 +22,13 @@ export default function IndabaXProjectsPreview() {
           {projects.map((p) => (
             <Link
               key={p.id}
-              to={`/projects/${p.slug}`}
-              className="bg-indabax-black-light rounded-xl overflow-hidden border border-white/10 hover:border-indabax-green transition-colors text-white"
+              to={`/indabax/projects/${p.slug}`}
+              className="bg-white rounded-xl overflow-hidden border border-indabax-green/20 hover:border-indabax-green transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               {p.cover_image_url && <img src={p.cover_image_url} alt={p.title} className="w-full h-44 object-cover" />}
               <div className="p-5">
-                <h3 className="font-display font-bold text-lg mb-2">{p.title}</h3>
-                <p className="text-sm text-white/60 line-clamp-2">{p.abstract}</p>
+                <h3 className="font-display font-bold text-lg text-indabax-black mb-2">{p.title}</h3>
+                <p className="text-sm text-indabax-black/70 line-clamp-2">{p.abstract}</p>
               </div>
             </Link>
           ))}

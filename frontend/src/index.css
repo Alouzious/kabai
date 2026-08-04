@@ -13,11 +13,11 @@
   --color-text-body: #000000;      /* Pure Black — main body typography */
   --color-border-soft: #DEE2E6;
 
-  /* IndabaX sub-site palette stays untouched — its own green/black/white brand */
-  --color-indabax-green: #00D26A;
-  --color-indabax-green-dark: #00A855;
-  --color-indabax-black: #0A0A0A;
-  --color-indabax-black-light: #1A1A1A;
+  /* IndabaX sub-site palette — WhatsApp-inspired (preview, revert if not working) */
+  --color-indabax-green: #00E676;
+  --color-indabax-green-dark: #075E54;
+  --color-indabax-black: #075E54;
+  --color-indabax-black-light: #111B21;
 
   --font-display: "Roboto Condensed", sans-serif;
   --font-body: "Poppins", sans-serif;

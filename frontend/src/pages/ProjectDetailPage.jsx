@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { ExternalLink, ArrowLeft, Calendar, Tag } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -16,6 +16,8 @@ const fadeUp = {
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
+  const location = useLocation();
+  const isIndabaX = location.pathname.startsWith("/indabax");
   const [project, setProject] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -30,7 +32,10 @@ export default function ProjectDetailPage() {
     return (
       <div className="max-w-2xl mx-auto px-6 py-32 text-center">
         <h1 className="font-display text-3xl font-bold mb-4">Project not found</h1>
-        <Link to="/projects" className="text-accent font-semibold hover:text-accent-light">
+        <Link
+          to={isIndabaX ? "/indabax/projects" : "/projects"}
+          className={`font-semibold ${isIndabaX ? "text-indabax-green hover:text-indabax-green-dark" : "text-accent hover:text-accent-light"}`}
+        >
           Back to all projects
         </Link>
       </div>
@@ -47,14 +52,18 @@ export default function ProjectDetailPage() {
         {project.cover_image_url && (
           <img src={project.cover_image_url} alt={project.title} className="w-full h-full object-cover" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
+        <div
+          className={`absolute inset-0 bg-gradient-to-t ${
+            isIndabaX ? "from-indabax-black via-indabax-black/40" : "from-charcoal via-charcoal/40"
+          } to-transparent`}
+        />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10">
           <div className="max-w-3xl mx-auto text-center">
             <motion.p
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              className="text-accent font-semibold tracking-widest text-sm mb-3"
+              className={`${isIndabaX ? "text-indabax-green" : "text-accent"} font-semibold tracking-widest text-sm mb-3`}
             >
               {project.status === "completed" ? "COMPLETED PROJECT" : "ONGOING PROJECT"}
             </motion.p>
@@ -73,7 +82,12 @@ export default function ProjectDetailPage() {
 
       <div className="max-w-3xl mx-auto px-6 py-16">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          <Link to="/projects" className="inline-flex items-center gap-2 text-sm text-[--color-text-body] hover:text-accent transition-colors mb-10">
+          <Link
+            to={isIndabaX ? "/indabax/projects" : "/projects"}
+            className={`inline-flex items-center gap-2 text-sm text-[--color-text-body] transition-colors mb-10 ${
+              isIndabaX ? "hover:text-indabax-green" : "hover:text-accent"
+            }`}
+          >
             <ArrowLeft size={16} />
             <span>Back to all projects</span>
           </Link>
@@ -84,13 +98,15 @@ export default function ProjectDetailPage() {
           whileInView="visible"
           viewport={{ once: true }}
           variants={fadeUp}
-          className="bg-gradient-to-br from-cream to-cream-dark rounded-2xl p-8 mb-10"
+          className={`rounded-2xl p-8 mb-10 ${
+            isIndabaX ? "bg-indabax-black-light" : "bg-gradient-to-br from-cream to-cream-dark"
+          }`}
         >
           <h2 className="font-display font-bold text-xl mb-3 flex items-center gap-2">
-            <Tag size={18} className="text-accent" />
+            <Tag size={18} className={isIndabaX ? "text-indabax-green" : "text-accent"} />
             <span>Abstract</span>
           </h2>
-          <p className="text-[--color-text-body] leading-relaxed text-[1.05rem]">
+          <p className={`leading-relaxed text-[1.05rem] ${isIndabaX ? "text-white/80" : "text-[--color-text-body]"}`}>
             {project.abstract}
           </p>
         </motion.div>
@@ -125,7 +141,7 @@ export default function ProjectDetailPage() {
               {project.tech_stack.map((t) => (
                 <span
                   key={t}
-                  className="bg-charcoal text-white px-4 py-2 rounded-full text-sm font-medium"
+                  className={`${isIndabaX ? "bg-indabax-black-light" : "bg-charcoal"} text-white px-4 py-2 rounded-full text-sm font-medium`}
                 >
                   {t}
                 </span>
@@ -148,7 +164,11 @@ export default function ProjectDetailPage() {
                 href={project.github_url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 bg-charcoal text-white px-5 py-3 rounded-lg font-semibold hover:bg-charcoal-light transition"
+              className={`flex items-center gap-2 px-5 py-3 rounded-lg font-semibold transition ${
+                isIndabaX
+                  ? "bg-indabax-black-light text-white hover:bg-indabax-green-dark"
+                  : "bg-charcoal text-white hover:bg-charcoal-light"
+              }`}
             >
               <FaGithub size={18} />
               <span>View GitHub Repo</span>
@@ -160,7 +180,11 @@ export default function ProjectDetailPage() {
                 href={project.live_url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 bg-accent text-white px-5 py-3 rounded-lg font-semibold hover:bg-accent-light transition"
+              className={`flex items-center gap-2 px-5 py-3 rounded-lg font-semibold transition ${
+                isIndabaX
+                  ? "bg-indabax-green text-indabax-black hover:bg-indabax-green-dark hover:text-white"
+                  : "bg-accent text-white hover:bg-accent-light"
+              }`}
             >
               <ExternalLink size={18} />
               <span>Visit Live Site</span>

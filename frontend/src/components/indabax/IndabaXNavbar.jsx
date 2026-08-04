@@ -7,7 +7,7 @@ export default function IndabaXNavbar() {
 
   return (
     <header className="bg-indabax-black text-white sticky top-0 z-50 border-b border-indabax-green/20">
-      <div className="bg-indabax-black-light border-b border-white/5">
+      <div className="bg-indabax-black border-b border-indabax-green/20">
         <div className="max-w-7xl mx-auto px-6 py-2">
           <Link to="/" className="flex items-center gap-2 text-xs text-white/60 hover:text-indabax-green transition w-fit">
             <ArrowLeft size={14} />
@@ -46,7 +46,7 @@ export default function IndabaXNavbar() {
       </div>
 
       {open && (
-        <div className="md:hidden bg-indabax-black-light px-6 py-4 flex flex-col gap-4 text-sm font-bold uppercase tracking-wide">
+        <div className="md:hidden bg-indabax-black px-6 py-4 flex flex-col gap-4 text-sm font-bold uppercase tracking-wide">
           <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2 text-white/60 normal-case font-normal">
             <ArrowLeft size={14} /> Back to KAB AI
           </Link>

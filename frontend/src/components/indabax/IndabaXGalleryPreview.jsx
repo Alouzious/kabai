@@ -12,7 +12,7 @@ export default function IndabaXGalleryPreview() {
   if (gallery.length === 0) return null;
 
   return (
-    <section className="bg-black px-6 py-24">
+    <section className="bg-indabax-black px-6 py-24">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-indabax-green font-bold tracking-widest text-sm mb-4 uppercase">Gallery</p>

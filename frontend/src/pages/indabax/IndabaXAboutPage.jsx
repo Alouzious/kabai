@@ -56,7 +56,7 @@ export default function IndabaXAboutPage() {
       <div className="grid lg:grid-cols-[240px_1fr] gap-16">
         {/* SIDEBAR */}
         <aside className="lg:sticky lg:top-24 self-start">
-          <p className="text-accent font-semibold tracking-widest text-sm mb-3">
+          <p className="text-indabax-green font-semibold tracking-widest text-sm mb-3">
             ABOUT INDABAX
           </p>
           <h1 className="font-display text-3xl font-bold mb-4 leading-tight">
@@ -72,7 +72,7 @@ export default function IndabaXAboutPage() {
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className="block pl-4 py-1.5 text-sm text-[--color-text-body] hover:text-accent hover:border-accent border-l-2 border-transparent -ml-px transition-colors"
+                    className="block pl-4 py-1.5 text-sm text-[--color-text-body] hover:text-indabax-green hover:border-indabax-green border-l-2 border-transparent -ml-px transition-colors"
                   >
                     {s.label}
                   </a>
@@ -85,7 +85,7 @@ export default function IndabaXAboutPage() {
         {/* MAIN CONTENT */}
         <div className="max-w-2xl">
           <section id="history" className="scroll-mt-24 pb-14">
-            <span className="text-accent font-display font-bold text-sm">01</span>
+            <span className="text-indabax-green font-display font-bold text-sm">01</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-5">
               Our History
             </h2>
@@ -98,7 +98,7 @@ export default function IndabaXAboutPage() {
               dedicated curriculum of its own despite growing student
               interest.
             </p>
-            <blockquote className="border-l-4 border-accent pl-5 italic text-[--color-text-body] my-6">
+            <blockquote className="border-l-4 border-indabax-green pl-5 italic text-[--color-text-body] my-6">
               A place of community for discussing, learning about, and
               working on machine learning and AI across disciplines.
             </blockquote>
@@ -113,7 +113,7 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="mission" className="scroll-mt-24 py-14 border-t border-black/10">
-            <span className="text-accent font-display font-bold text-sm">02</span>
+            <span className="text-indabax-green font-display font-bold text-sm">02</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-5">
               Vision &amp; Mission
             </h2>
@@ -133,14 +133,14 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="what-we-do" className="scroll-mt-24 py-14 border-t border-black/10">
-            <span className="text-accent font-display font-bold text-sm">03</span>
+            <span className="text-indabax-green font-display font-bold text-sm">03</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-8">
               What We Do
             </h2>
             <ol className="space-y-6">
               {objectives.map((o, i) => (
                 <li key={o.title} className="flex gap-4">
-                  <span className="text-accent font-display font-bold shrink-0 w-6">
+                  <span className="text-indabax-green font-display font-bold shrink-0 w-6">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <p className="text-[--color-text-body] leading-relaxed">
@@ -153,7 +153,7 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="values" className="scroll-mt-24 py-14 border-t border-black/10">
-            <span className="text-accent font-display font-bold text-sm">04</span>
+            <span className="text-indabax-green font-display font-bold text-sm">04</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-6">
               Core Values
             </h2>
@@ -170,7 +170,7 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="leadership" className="scroll-mt-24 py-14 border-t border-black/10">
-            <span className="text-accent font-display font-bold text-sm">05</span>
+            <span className="text-indabax-green font-display font-bold text-sm">05</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-3">
               Leadership
             </h2>
@@ -193,7 +193,7 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="membership" className="scroll-mt-24 py-14 border-t border-black/10">
-            <span className="text-accent font-display font-bold text-sm">06</span>
+            <span className="text-indabax-green font-display font-bold text-sm">06</span>
             <h2 className="font-display text-3xl font-bold mt-2 mb-5">
               Membership &amp; Meetings
             </h2>
@@ -213,19 +213,19 @@ export default function IndabaXAboutPage() {
           </section>
 
           <section id="connect" className="scroll-mt-24 pt-14 border-t border-black/10">
-            <div className="bg-gradient-to-br from-cream to-cream-dark rounded-2xl p-8 md:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="bg-indabax-black rounded-2xl p-8 md:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
-                <h2 className="font-display text-xl font-bold mb-2">
+                <h2 className="font-display text-xl font-bold text-white mb-2">
                   Join the movement
                 </h2>
-                <p className="text-[--color-text-body] text-sm leading-relaxed max-w-sm">
+                <p className="text-white/70 text-sm leading-relaxed max-w-sm">
                   Part of the wider Deep Learning Indaba community across the
                   continent. Come learn, build, and compete with us.
                 </p>
               </div>
               <a
                 href="mailto:indabaxug@gmail.com"
-                className="bg-accent text-white font-semibold px-7 py-3 rounded-full hover:opacity-90 transition-opacity whitespace-nowrap text-center"
+                className="bg-indabax-green text-indabax-black font-semibold px-7 py-3 rounded-full hover:opacity-90 transition-opacity whitespace-nowrap text-center"
               >
                 Get in Touch
               </a>

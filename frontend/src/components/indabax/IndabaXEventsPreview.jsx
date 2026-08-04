@@ -11,7 +11,7 @@ export default function IndabaXEventsPreview() {
   }, []);
 
   return (
-    <section className="bg-black text-white px-6 py-24">
+    <section className="bg-indabax-black text-white px-6 py-24">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-indabax-green font-bold tracking-widest text-sm mb-4 uppercase">Events</p>
@@ -25,9 +25,9 @@ export default function IndabaXEventsPreview() {
             ) : (
               <div className="space-y-4">
                 {upcomingEvents.map((e) => (
-                  <div key={e.id} className="bg-indabax-black-light rounded-xl p-6">
+                  <div key={e.id} className="bg-white rounded-xl p-6 border border-indabax-green/20 hover:border-indabax-green transition-colors">
                     <p className="text-indabax-green text-xs font-bold mb-1 uppercase">{new Date(e.event_date).toLocaleDateString()}</p>
-                    <h4 className="font-bold text-lg">{e.title}</h4>
+                    <h4 className="font-bold text-lg text-indabax-black">{e.title}</h4>
                   </div>
                 ))}
               </div>
@@ -40,9 +40,9 @@ export default function IndabaXEventsPreview() {
             ) : (
               <div className="space-y-4">
                 {pastEvents.map((e) => (
-                  <div key={e.id} className="bg-indabax-black-light text-white rounded-xl p-6 opacity-70">
+                  <div key={e.id} className="bg-white rounded-xl p-6 opacity-70">
                     <p className="text-indabax-green text-xs font-bold mb-1 uppercase">{new Date(e.event_date).toLocaleDateString()}</p>
-                    <h4 className="font-bold text-lg">{e.title}</h4>
+                    <h4 className="font-bold text-lg text-indabax-black">{e.title}</h4>
                   </div>
                 ))}
               </div>
