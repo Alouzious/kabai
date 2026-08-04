@@ -45,8 +45,7 @@ export default function IndabaXHero() {
         </div>
       ))}
 
-      <div className="absolute inset-0 bg-indabax-black/60 z-10" />
-      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_30%_30%,var(--color-indabax-green)_0%,transparent_50%)] z-10" />
+      <div className="absolute inset-0 bg-black/60 z-10" />
 
       <div className="max-w-4xl mx-auto relative z-20 w-full">
 
