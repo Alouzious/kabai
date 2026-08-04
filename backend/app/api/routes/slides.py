@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import slide as crud
 from app.db.session import get_db
 from app.schemas.slide import SlideCreate, SlideUpdate, SlideOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/slides", tags=["slides"])
 
@@ -17,14 +17,14 @@ def list_slides(site: str = None, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=SlideOut)
 def create_slide(
-    slide_in: SlideCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    slide_in: SlideCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_slide(db, slide_in)
 
 
 @router.put("/{slide_id}", response_model=SlideOut)
 def update_slide(
-    slide_id: uuid.UUID, slide_in: SlideUpdate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    slide_id: uuid.UUID, slide_in: SlideUpdate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     slide = crud.get_slide(db, slide_id)
     if not slide:
@@ -34,7 +34,7 @@ def update_slide(
 
 @router.delete("/{slide_id}")
 def delete_slide(
-    slide_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    slide_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     slide = crud.get_slide(db, slide_id)
     if not slide:

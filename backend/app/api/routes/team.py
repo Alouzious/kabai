@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.crud import team as crud
 from app.db.session import get_db
 from app.schemas.team import TeamMemberCreate, TeamMemberUpdate, TeamMemberOut
-from app.api.deps import get_current_user
+from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/team", tags=["team"])
 
@@ -23,7 +23,7 @@ def list_team(
 
 @router.post("/", response_model=TeamMemberOut)
 def create_member(
-    member_in: TeamMemberCreate, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    member_in: TeamMemberCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     return crud.create_team_member(db, member_in)
 
@@ -33,7 +33,7 @@ def update_member(
     member_id: uuid.UUID,
     member_in: TeamMemberUpdate,
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_current_super_admin),
 ):
     member = crud.get_team_member(db, member_id)
     if not member:
@@ -43,7 +43,7 @@ def update_member(
 
 @router.delete("/{member_id}")
 def delete_member(
-    member_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_user)
+    member_id: uuid.UUID, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
 ):
     member = crud.get_team_member(db, member_id)
     if not member:
@@ -54,7 +54,7 @@ def delete_member(
 
 @router.post("/refresh-archiving")
 def trigger_archiving(
-    db: Session = Depends(get_db), _admin=Depends(get_current_user)
+    db: Session = Depends(get_db), _admin=Depends(get_current_super_admin)
 ):
     from datetime import datetime
     current_year = datetime.utcnow().year
