@@ -77,8 +77,8 @@ export default function Navbar() {
                 Communities <ChevronDown size={14} />
               </button>
               {communitiesOpen && (
-                <div className="absolute top-full left-0 bg-white text-charcoal rounded-lg shadow-xl py-2 w-56 z-20">
-                  <Link to="/indabax" className="block px-4 py-2 hover:bg-cream-dark text-sm">IndabaX AI Club</Link>
+                <div className="absolute top-full left-0 bg-white/70 backdrop-blur-md text-charcoal rounded-lg shadow-xl py-2 w-56 z-20 border border-white/40">
+                  <Link to="/indabax" className="block px-4 py-2 hover:bg-white/80 text-sm">IndabaX AI Club</Link>
                 </div>
               )}
             </div>
