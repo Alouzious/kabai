@@ -62,9 +62,9 @@ export default function IndabaXTeamPage() {
                     : "border border-transparent hover:-translate-y-1 hover:border-indabax-green/40"
                 }`}
               >
-                <div className="h-56 overflow-hidden bg-indabax-green/10">
+                <div className="h-64 overflow-hidden bg-indabax-green/10">
                   {m.photo_url ? (
-                    <img src={m.photo_url} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={m.photo_url} alt={m.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-indabax-green/30">
                       <FaCircleUser size={72} />
@@ -98,8 +98,8 @@ export default function IndabaXTeamPage() {
             className="bg-white rounded-2xl overflow-hidden shadow-2xl w-full max-w-lg my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-64 bg-indabax-green/10">
-              {selected.photo_url && <img src={selected.photo_url} alt={selected.name} className="w-full h-full object-cover" />}
+            <div className="relative h-72 bg-indabax-green/10">
+              {selected.photo_url && <img src={selected.photo_url} alt={selected.name} className="w-full h-full object-contain" />}
               <button
                 onClick={() => setSelected(null)}
                 className="absolute top-4 right-4 bg-white/90 hover:bg-indabax-green hover:text-black p-2 rounded-full transition-colors"

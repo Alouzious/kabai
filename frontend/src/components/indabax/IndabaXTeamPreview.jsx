@@ -21,8 +21,8 @@ export default function IndabaXTeamPreview() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {team.map((m) => (
             <div key={m.id} className="bg-white rounded-xl overflow-hidden border border-indabax-green/20 hover:border-indabax-green transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-              <div className="h-40 bg-indabax-green/10 overflow-hidden">
-                {m.photo_url && <img src={m.photo_url} alt={m.name} className="w-full h-full object-cover" />}
+              <div className="h-48 bg-indabax-green/10 overflow-hidden">
+                {m.photo_url && <img src={m.photo_url} alt={m.name} className="w-full h-full object-contain" />}
               </div>
               <div className="p-4 text-center">
                 <h3 className="font-bold text-sm text-indabax-black">{m.name}</h3>
