@@ -66,7 +66,7 @@ export default function IndabaXHero() {
         </div>
       ))}
 
-      <div className="absolute inset-0 bg-black/35 z-10" />
+      <div className="absolute inset-0 bg-black/25 z-10" />
 
       <button
         onClick={() => setIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)}
@@ -76,34 +76,35 @@ export default function IndabaXHero() {
         <ChevronLeft size={30} />
       </button>
 
-      <div className="max-w-4xl mx-auto relative z-20 w-full">
+      <div className="max-w-3xl mx-auto relative z-20 w-full mt-10 md:mt-16">
 
         {SLIDES.map((slide, i) => (
           <div
-            key={slide.title}
+            key={`${slide.title}-${i === index ? "active" : "idle"}`}
             className={`transition-all duration-700 ${
               i === index
                 ? "opacity-100 translate-y-0 relative"
                 : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
             }`}
           >
-            <h1 className="font-display text-5xl md:text-8xl font-black leading-none mb-8 uppercase">
-              {slide.title}
-            </h1>
-            <p className="text-white/60 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
-              {slide.subtitle}
-            </p>
+            <div className={`bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 px-5 py-9 md:px-8 md:py-12 shadow-2xl inline-block max-w-full ${i === index ? "animate-popup" : ""}`}>
+              <h1 className="font-display text-xl md:text-3xl font-black leading-tight mb-3 uppercase">
+                {slide.title}
+              </h1>
+              <p className="text-white/80 max-w-xl mx-auto mb-5 text-xs md:text-sm leading-relaxed">
+                {slide.subtitle}
+              </p>
+              <Link
+                to="/indabax/join"
+                className="bg-indabax-green text-indabax-black px-5 py-2.5 rounded-full font-bold text-xs md:text-sm hover:bg-white transition inline-block"
+              >
+                Join the Community
+              </Link>
+            </div>
           </div>
         ))}
 
-        <Link
-          to="/indabax/join"
-          className="bg-indabax-green text-indabax-black px-8 py-4 rounded-full font-bold text-lg hover:bg-white transition inline-block"
-        >
-          Join the Community
-        </Link>
-
-        <div className="flex justify-center gap-2 mt-12">
+        <div className="flex justify-center gap-2 mt-8">
           {SLIDES.map((_, i) => (
             <button
               key={i}
