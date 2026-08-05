@@ -6,6 +6,7 @@ import api from "../../lib/api";
 const ROLE_ORDER = [
   "Club President",
   "Vice President",
+  "Speaker",
   "Secretary",
   "Technical Lead",
   "Year Two Representative",

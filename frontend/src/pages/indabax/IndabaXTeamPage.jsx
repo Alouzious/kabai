@@ -7,6 +7,7 @@ import { FaCircleUser } from "react-icons/fa6";
 const ROLE_ORDER = [
   "Club President",
   "Vice President",
+  "Speaker",
   "Secretary",
   "Technical Lead",
   "Year Two Representative",
