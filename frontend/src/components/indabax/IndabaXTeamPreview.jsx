@@ -3,11 +3,36 @@ import { Link } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
 
+const ROLE_ORDER = [
+  "Club President",
+  "Vice President",
+  "Secretary",
+  "Technical Lead",
+  "Year Two Representative",
+  "Women Lead",
+  "Social Media Lead",
+  "Graphic Designer",
+  "Event Planner",
+];
+
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
 
   useEffect(() => {
-    api.get("/team/", { params: { site: "indabax" } }).then((r) => setTeam(r.data.filter((m) => m.is_current))).catch(() => {});
+    api
+      .get("/team/", { params: { site: "indabax" } })
+      .then((r) =>
+        setTeam(
+          r.data
+            .filter((m) => m.is_current)
+            .sort(
+              (a, b) =>
+                (ROLE_ORDER.indexOf(a.role) === -1 ? 999 : ROLE_ORDER.indexOf(a.role)) -
+                (ROLE_ORDER.indexOf(b.role) === -1 ? 999 : ROLE_ORDER.indexOf(b.role))
+            )
+        )
+      )
+      .catch(() => {});
   }, []);
 
   return (

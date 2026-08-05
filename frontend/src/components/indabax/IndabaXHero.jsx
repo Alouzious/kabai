@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SLIDES = [
   {
@@ -16,6 +17,26 @@ const SLIDES = [
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1600&auto=format&fit=crop",
     title: "Powered by Community",
     subtitle: "Proudly affiliated with Deep Learning IndabaX Uganda, part of the pan-African Deep Learning Indaba movement.",
+  },
+  {
+    image: "https://res.cloudinary.com/a2li9op5/image/upload/w_1600,q_auto,f_auto/v1785921057/gallery/indabax/r84i7fnnmgrrp8jaktw8.jpg",
+    title: "Unveiling Data Insights",
+    subtitle: "Data insights session with Mr. Simon Alex, 29th April 2026.",
+  },
+  {
+    image: "https://res.cloudinary.com/a2li9op5/image/upload/w_1600,q_auto,f_auto/v1785921110/gallery/indabax/g7okm8drptjgwbjrobhv.jpg",
+    title: "Unveiling Data Insights",
+    subtitle: "Hands-on learning and knowledge sharing at the session.",
+  },
+  {
+    image: "https://res.cloudinary.com/a2li9op5/image/upload/w_1600,q_auto,f_auto/v1785921122/gallery/indabax/tn85cql2mt0ybxch35wl.jpg",
+    title: "Unveiling Data Insights",
+    subtitle: "A packed room of curious minds ready to explore data.",
+  },
+  {
+    image: "https://res.cloudinary.com/a2li9op5/image/upload/w_1600,q_auto,f_auto/v1785921133/gallery/indabax/ml7fzcrbdnnqdw8hruia.jpg",
+    title: "Unveiling Data Insights",
+    subtitle: "Connecting theory with real-world data practice.",
   },
 ];
 
@@ -45,7 +66,15 @@ export default function IndabaXHero() {
         </div>
       ))}
 
-      <div className="absolute inset-0 bg-black/60 z-10" />
+      <div className="absolute inset-0 bg-black/35 z-10" />
+
+      <button
+        onClick={() => setIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)}
+        aria-label="Previous slide"
+        className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/40 hover:bg-indabax-green text-white hover:text-black transition-colors"
+      >
+        <ChevronLeft size={30} />
+      </button>
 
       <div className="max-w-4xl mx-auto relative z-20 w-full">
 
@@ -79,6 +108,7 @@ export default function IndabaXHero() {
             <button
               key={i}
               onClick={() => setIndex(i)}
+              aria-label={`Go to slide ${i + 1}`}
               className={`h-2 rounded-full transition-all ${
                 i === index ? "bg-indabax-green w-10" : "bg-white/30 w-2"
               }`}
@@ -86,6 +116,14 @@ export default function IndabaXHero() {
           ))}
         </div>
       </div>
+
+      <button
+        onClick={() => setIndex((prev) => (prev + 1) % SLIDES.length)}
+        aria-label="Next slide"
+        className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/40 hover:bg-indabax-green text-white hover:text-black transition-colors"
+      >
+        <ChevronRight size={30} />
+      </button>
     </section>
   );
 }

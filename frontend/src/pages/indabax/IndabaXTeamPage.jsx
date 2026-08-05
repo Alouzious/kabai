@@ -4,6 +4,18 @@ import { X } from "lucide-react";
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 
+const ROLE_ORDER = [
+  "Club President",
+  "Vice President",
+  "Secretary",
+  "Technical Lead",
+  "Year Two Representative",
+  "Women Lead",
+  "Social Media Lead",
+  "Graphic Designer",
+  "Event Planner",
+];
+
 export default function IndabaXTeamPage() {
   const [team, setTeam] = useState([]);
   const [year, setYear] = useState(null);
@@ -11,7 +23,15 @@ export default function IndabaXTeamPage() {
 
   useEffect(() => {
     import("../../lib/api").then(({ default: api }) => {
-      api.get("/team/", { params: { site: "indabax", year } }).then((res) => setTeam(res.data));
+      api.get("/team/", { params: { site: "indabax", year } }).then((res) =>
+        setTeam(
+          [...res.data].sort(
+            (a, b) =>
+              (ROLE_ORDER.indexOf(a.role) === -1 ? 999 : ROLE_ORDER.indexOf(a.role)) -
+              (ROLE_ORDER.indexOf(b.role) === -1 ? 999 : ROLE_ORDER.indexOf(b.role))
+          )
+        )
+      );
     });
   }, [year]);
 
