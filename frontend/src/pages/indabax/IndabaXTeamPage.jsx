@@ -5,6 +5,7 @@ import { FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 
 const ROLE_ORDER = [
+  "Community Patron",
   "Club President",
   "Vice President",
   "Speaker",

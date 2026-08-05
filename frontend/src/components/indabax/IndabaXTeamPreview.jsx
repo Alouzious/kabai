@@ -4,6 +4,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
 
 const ROLE_ORDER = [
+  "Community Patron",
   "Club President",
   "Vice President",
   "Speaker",
