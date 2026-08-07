@@ -51,7 +51,7 @@ export default function IndabaXHero() {
   }, []);
 
   return (
-    <section className="relative text-white px-6 py-32 md:py-40 text-center overflow-hidden min-h-[600px] flex items-center">
+    <section className="relative text-white px-6 pt-32 md:pt-40 pb-6 md:pb-10 text-center overflow-hidden min-h-[600px] flex items-end">
       {SLIDES.map((slide, i) => (
         <div
           key={slide.image}
@@ -76,7 +76,7 @@ export default function IndabaXHero() {
         <ChevronLeft size={30} />
       </button>
 
-      <div className="max-w-3xl mx-auto relative z-20 w-full mt-10 md:mt-16">
+      <div className="w-full max-w-3xl mx-auto relative z-20">
 
         {SLIDES.map((slide, i) => (
           <div
@@ -87,16 +87,21 @@ export default function IndabaXHero() {
                 : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
             }`}
           >
-            <div className={`bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 px-5 py-9 md:px-8 md:py-12 shadow-2xl inline-block max-w-full ${i === index ? "animate-popup" : ""}`}>
-              <h1 className="font-display text-xl md:text-3xl font-black leading-tight mb-3 uppercase">
+            <div
+              style={i === index ? { animationDelay: "1000ms" } : undefined}
+              className={`bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 px-5 py-4 md:px-8 md:py-6 shadow-2xl inline-block max-w-full text-left md:text-center ${
+                i === index ? "animate-popup" : ""
+              }`}
+            >
+              <h1 className="font-display text-base md:text-2xl font-black leading-tight mb-1 uppercase">
                 {slide.title}
               </h1>
-              <p className="text-white/80 max-w-xl mx-auto mb-5 text-xs md:text-sm leading-relaxed">
+              <p className="text-white/80 max-w-xl mx-auto mb-3 text-[11px] md:text-xs leading-relaxed">
                 {slide.subtitle}
               </p>
               <Link
                 to="/indabax/join"
-                className="bg-indabax-green text-indabax-black px-5 py-2.5 rounded-full font-bold text-xs md:text-sm hover:bg-white transition inline-block"
+                className="bg-indabax-green text-indabax-black px-4 py-2 rounded-full font-bold text-[10px] md:text-xs hover:bg-white transition inline-block"
               >
                 Join the Community
               </Link>
