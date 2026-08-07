@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import api from "../../lib/api";
 
@@ -30,6 +31,9 @@ export default function IndabaXGalleryPage() {
   const [events, setEvents] = useState([]);
   const [imagesByEvent, setImagesByEvent] = useState({});
   const [lightbox, setLightbox] = useState(null);
+  const [searchParams] = useSearchParams();
+  const targetEventId = searchParams.get("event");
+  const scrolledRef = useRef(false);
 
   useEffect(() => {
     api.get("/events/", { params: { site: "indabax" } }).then((res) => {
@@ -46,6 +50,17 @@ export default function IndabaXGalleryPage() {
       });
     });
   }, []);
+
+  // Scroll to the requested event's album once its images have loaded
+  useEffect(() => {
+    if (!targetEventId || scrolledRef.current) return;
+    if (!imagesByEvent[targetEventId]) return;
+    const el = document.getElementById(`event-${targetEventId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrolledRef.current = true;
+    }
+  }, [imagesByEvent, targetEventId]);
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
@@ -81,8 +96,15 @@ export default function IndabaXGalleryPage() {
         events.map((e) => {
           const images = imagesByEvent[e.id] || [];
           if (images.length === 0) return null;
+          const isTarget = targetEventId === e.id;
           return (
-            <div key={e.id} className="mb-16">
+            <div
+              key={e.id}
+              id={`event-${e.id}`}
+              className={`mb-16 scroll-mt-24 rounded-2xl transition-colors ${
+                isTarget ? "ring-2 ring-indabax-green/40 ring-offset-4 ring-offset-transparent p-4 -m-4" : ""
+              }`}
+            >
               <h2 className="font-display text-2xl font-bold mb-6">{e.title}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {images.map((img, i) => (
