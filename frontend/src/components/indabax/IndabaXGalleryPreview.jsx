@@ -1,35 +1,36 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Play } from "lucide-react";
+import { Camera } from "lucide-react";
 import api from "../../lib/api";
-
-const ALBUM_TITLE = "UNVEILING DATA INSIGHTS SESSION 29TH APRIL 2026 WITH MR. SIMON ALEX";
 
 function optimized(url) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
-  return url.replace("/image/upload/", "/image/upload/w_1600,q_auto,f_auto/");
+  return url.replace("/image/upload/", "/image/upload/w_800,q_auto,f_auto/");
 }
 
 export default function IndabaXGalleryPreview() {
-  const [album, setAlbum] = useState(null);
+  const [albums, setAlbums] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     api
       .get("/events/", { params: { site: "indabax", limit: 50 } })
       .then((res) => {
-        const ev = res.data.find((e) => e.title === ALBUM_TITLE) || res.data[0];
-        if (!ev) return;
-        api.get("/gallery/", { params: { event_id: ev.id, limit: 200 } }).then((r) => {
-          if (r.data.length === 200) {
-            api.get("/gallery/", { params: { event_id: ev.id, limit: 200, skip: 200 } }).then((r2) => {
-              setAlbum({ event: ev, images: r.data.concat(r2.data) });
-            });
-          } else {
-            setAlbum({ event: ev, images: r.data });
-          }
+        const events = res.data;
+        Promise.all(
+          events.map((e) =>
+            api
+              .get("/gallery/", { params: { event_id: e.id, limit: 1 } })
+              .then((r) => ({ event: e, cover: r.data[0] || null }))
+              .catch(() => ({ event: e, cover: null }))
+          )
+        ).then((results) => {
+          // Only show events that actually have at least one photo
+          setAlbums(results.filter((r) => r.cover));
+          setLoaded(true);
         });
       })
-      .catch(() => {});
+      .catch(() => setLoaded(true));
   }, []);
 
   return (
@@ -40,35 +41,35 @@ export default function IndabaXGalleryPreview() {
           <h2 className="font-display text-4xl md:text-5xl font-black text-white uppercase">Moments from IndabaX</h2>
         </div>
 
-        {/* Album cover link */}
-        {album?.event?.banner_url ? (
-          <Link
-            to="/indabax/gallery"
-            className="group relative block rounded-2xl overflow-hidden h-72 md:h-[480px]"
-          >
-            <img
-              src={optimized(album.event.banner_url)}
-              alt={album.event.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col items-center justify-end text-center p-8">
-              <span className="text-indabax-green font-bold tracking-widest text-xs mb-2 uppercase">View Full Album</span>
-              <h3 className="font-display text-2xl md:text-4xl font-black text-white uppercase">
-                {album.event.title}
-              </h3>
-              <p className="text-white/70 text-sm md:text-base mt-2">
-                {`${album.images.length} photos`}
-              </p>
-              <span className="mt-6 flex items-center gap-2 bg-indabax-green text-indabax-black px-8 py-3 rounded-full font-bold text-sm group-hover:bg-white transition-colors">
-                <Play size={16} /> Open the album
-              </span>
-            </div>
-          </Link>
-        ) : (
+        {!loaded ? null : albums.length === 0 ? (
           <div className="text-center">
             <Link to="/indabax/gallery" className="text-indabax-green font-bold uppercase tracking-wide transition-colors hover:text-white">
               View full gallery
             </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {albums.map(({ event, cover }) => (
+              <Link
+                key={event.id}
+                to={`/indabax/gallery?event=${event.id}`}
+                className="group relative block rounded-2xl overflow-hidden h-72 md:h-96"
+              >
+                <img
+                  src={optimized(cover.image_url)}
+                  alt={event.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col items-start justify-end text-left p-6">
+                  <span className="flex items-center gap-1.5 text-indabax-green font-bold tracking-widest text-xs mb-2 uppercase">
+                    <Camera size={14} /> View Album
+                  </span>
+                  <h3 className="font-display text-xl md:text-2xl font-black text-white uppercase leading-tight">
+                    {event.title}
+                  </h3>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
 

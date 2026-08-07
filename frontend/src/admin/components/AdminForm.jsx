@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import api from "../../lib/api";
 
 export default function AdminForm({ fields, initialValues, onSubmit, onCancel, submitLabel = "Save" }) {
   const [values, setValues] = useState({});
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [asyncOptions, setAsyncOptions] = useState({});
 
   useEffect(() => {
     const defaults = {};
@@ -21,6 +23,21 @@ export default function AdminForm({ fields, initialValues, onSubmit, onCancel, s
     });
     setValues(defaults);
   }, [fields, initialValues]);
+
+  useEffect(() => {
+    fields
+      .filter((f) => f.type === "async-select")
+      .forEach((f) => {
+        api
+          .get(f.endpoint, { params: f.endpointParams || {} })
+          .then((res) => {
+            setAsyncOptions((prev) => ({ ...prev, [f.name]: res.data }));
+          })
+          .catch(() => {
+            setAsyncOptions((prev) => ({ ...prev, [f.name]: [] }));
+          });
+      });
+  }, [fields]);
 
   function handleChange(name, value) {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -67,7 +84,7 @@ export default function AdminForm({ fields, initialValues, onSubmit, onCancel, s
               {f.label}
               {f.required && <span className="text-accent"> *</span>}
             </label>
-            {renderInput(f, values, handleChange)}
+            {renderInput(f, values, handleChange, asyncOptions)}
           </div>
         ))}
       </div>
@@ -101,7 +118,7 @@ export default function AdminForm({ fields, initialValues, onSubmit, onCancel, s
 const inputClass =
   "w-full px-3 py-2 border border-border-soft rounded-md text-sm text-text-body bg-cream focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent";
 
-function renderInput(field, values, handleChange) {
+function renderInput(field, values, handleChange, asyncOptions = {}) {
   const value = values[field.name] ?? "";
 
   if (field.type === "textarea") {
@@ -126,6 +143,25 @@ function renderInput(field, values, handleChange) {
         />
         <span className="text-sm text-text-body">{value ? "Yes" : "No"}</span>
       </label>
+    );
+  }
+
+
+  if (field.type === "async-select") {
+    const options = asyncOptions[field.name] || [];
+    return (
+      <select
+        value={value}
+        onChange={(e) => handleChange(field.name, e.target.value)}
+        className={inputClass}
+      >
+        <option value="">Select {field.label}...</option>
+        {options.map((opt) => (
+          <option key={opt[field.optionValue || "id"]} value={opt[field.optionValue || "id"]}>
+            {opt[field.optionLabel || "title"]}
+          </option>
+        ))}
+      </select>
     );
   }
 

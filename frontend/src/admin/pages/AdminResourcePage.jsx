@@ -11,6 +11,7 @@ export default function AdminResourcePage({ resourceKey }) {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [lookupOptions, setLookupOptions] = useState({});
   const [filters, setFilters] = useState(() => {
     const initial = {};
     (config.listParams || []).forEach((p) => {
@@ -18,6 +19,23 @@ export default function AdminResourcePage({ resourceKey }) {
     });
     return initial;
   });
+
+  // Fields with type "async-select" carry endpoint/optionValue/optionLabel metadata.
+  // Fetch their options once so we can (a) show a dropdown in the filter bar and
+  // (b) resolve id -> label when rendering the corresponding table column.
+  useEffect(() => {
+    const asyncFields = config.fields.filter((f) => f.type === "async-select");
+    asyncFields.forEach((f) => {
+      api
+        .get(f.endpoint, { params: f.endpointParams || {} })
+        .then((res) => {
+          setLookupOptions((prev) => ({ ...prev, [f.name]: res.data }));
+        })
+        .catch(() => {
+          setLookupOptions((prev) => ({ ...prev, [f.name]: [] }));
+        });
+    });
+  }, [config.fields]);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -82,6 +100,11 @@ export default function AdminResourcePage({ resourceKey }) {
     ? config.fields.filter((f) => !f.createOnly)
     : config.fields;
 
+  // Look up a field's async-select metadata by name, if it has any.
+  function asyncFieldFor(name) {
+    return config.fields.find((f) => f.name === name && f.type === "async-select");
+  }
+
   return (
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -100,19 +123,47 @@ export default function AdminResourcePage({ resourceKey }) {
 
       {config.listParams && config.listParams.length > 0 && (
         <div className="flex flex-wrap gap-3 sm:gap-4 mt-4 pb-4 border-b border-border-soft">
-          {config.listParams.map((p) => (
-            <div key={p.name} className="flex items-center gap-2">
-              <label className="text-sm text-text-body/70">{p.label}</label>
-              <input
-                type="text"
-                value={filters[p.name] ?? ""}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, [p.name]: e.target.value }))
-                }
-                className="text-sm px-2.5 py-1.5 border border-border-soft rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent w-28 sm:w-auto"
-              />
-            </div>
-          ))}
+          {config.listParams.map((p) => {
+            const asyncField = asyncFieldFor(p.name);
+            if (asyncField) {
+              const options = lookupOptions[p.name] || [];
+              return (
+                <div key={p.name} className="flex items-center gap-2">
+                  <label className="text-sm text-text-body/70">{p.label}</label>
+                  <select
+                    value={filters[p.name] ?? ""}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, [p.name]: e.target.value }))
+                    }
+                    className="text-sm px-2.5 py-1.5 border border-border-soft rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent w-40 sm:w-auto"
+                  >
+                    <option value="">All</option>
+                    {options.map((opt) => (
+                      <option
+                        key={opt[asyncField.optionValue || "id"]}
+                        value={opt[asyncField.optionValue || "id"]}
+                      >
+                        {opt[asyncField.optionLabel || "title"]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            }
+            return (
+              <div key={p.name} className="flex items-center gap-2">
+                <label className="text-sm text-text-body/70">{p.label}</label>
+                <input
+                  type="text"
+                  value={filters[p.name] ?? ""}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, [p.name]: e.target.value }))
+                  }
+                  className="text-sm px-2.5 py-1.5 border border-border-soft rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent w-28 sm:w-auto"
+                />
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -136,10 +187,23 @@ export default function AdminResourcePage({ resourceKey }) {
         <p className="text-sm text-text-body/60 mt-6">Loading...</p>
       ) : (
         <DataTable
-          columns={config.columns.map((key) => ({
-            key,
-            label: config.fields.find((f) => f.name === key)?.label || key,
-          }))}
+          columns={config.columns.map((key) => {
+            const asyncField = asyncFieldFor(key);
+            const label = config.fields.find((f) => f.name === key)?.label || key;
+            if (asyncField) {
+              const options = lookupOptions[key] || [];
+              const map = {};
+              options.forEach((opt) => {
+                map[opt[asyncField.optionValue || "id"]] = opt[asyncField.optionLabel || "title"];
+              });
+              return {
+                key,
+                label,
+                render: (row) => map[row[key]] || row[key] || "—",
+              };
+            }
+            return { key, label };
+          })}
           data={items}
           idField={config.idField}
           onEdit={config.canUpdate ? openEdit : undefined}

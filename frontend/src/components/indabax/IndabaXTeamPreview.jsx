@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
-
 const ROLE_ORDER = [
   "Community Patron",
   "Club President",
@@ -16,10 +15,8 @@ const ROLE_ORDER = [
   "Graphic Designer",
   "Event Planner",
 ];
-
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
-
   useEffect(() => {
     api
       .get("/team/", { params: { site: "indabax" } })
@@ -36,12 +33,11 @@ export default function IndabaXTeamPreview() {
       )
       .catch(() => {});
   }, []);
-
   return (
     <section className="px-6 py-24 max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <p className="text-indabax-green font-bold tracking-widest text-sm mb-4 uppercase">Our Team</p>
-        <h2 className="font-display text-4xl md:text-5xl font-black uppercase">IndabaX Organizers</h2>
+        <p className="text-indabax-green font-bold tracking-widest text-sm mb-4 uppercase">Leadership</p>
+        <h2 className="font-display text-4xl md:text-5xl font-black uppercase">Leadership</h2>
       </div>
       {team.length === 0 ? (
         <p className="text-center text-[--color-text-body]">Team information coming soon.</p>

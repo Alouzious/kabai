@@ -29,6 +29,7 @@ import AdminBlog from "./admin/pages/AdminBlog";
 import AdminCategories from "./admin/pages/AdminCategories";
 import AdminCoreValues from "./admin/pages/AdminCoreValues";
 import AdminEvents from "./admin/pages/AdminEvents";
+import AdminGallery from "./admin/pages/AdminGallery";
 import AdminTeam from "./admin/pages/AdminTeam";
 import AdminResearch from "./admin/pages/AdminResearch";
 
@@ -69,6 +70,7 @@ function App() {
             <Route path="categories" element={<AdminCategories />} />
             <Route path="core-values" element={<AdminCoreValues />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="gallery" element={<AdminGallery />} />
             <Route path="team" element={<AdminTeam />} />
             <Route path="research" element={<AdminResearch />} />
           </Route>

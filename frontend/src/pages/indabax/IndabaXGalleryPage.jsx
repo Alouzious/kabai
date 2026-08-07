@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { X, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { X, ChevronLeft, ChevronRight, Download, ArrowLeft } from "lucide-react";
 import api from "../../lib/api";
 
 function optimized(url) {
@@ -30,11 +31,19 @@ export default function IndabaXGalleryPage() {
   const [events, setEvents] = useState([]);
   const [imagesByEvent, setImagesByEvent] = useState({});
   const [lightbox, setLightbox] = useState(null);
+  const [searchParams] = useSearchParams();
+  const targetEventId = searchParams.get("event");
 
   useEffect(() => {
     api.get("/events/", { params: { site: "indabax" } }).then((res) => {
       setEvents(res.data);
-      res.data.forEach((e) => {
+
+      // Only fetch photos for the requested event, or for all events if none specified
+      const eventsToFetch = targetEventId
+        ? res.data.filter((e) => e.id === targetEventId)
+        : res.data;
+
+      eventsToFetch.forEach((e) => {
         let all = [];
         const fetchPage = (skip) =>
           api.get("/gallery/", { params: { event_id: e.id, limit: 200, skip } }).then((r) => {
@@ -45,7 +54,7 @@ export default function IndabaXGalleryPage() {
         fetchPage(0);
       });
     });
-  }, []);
+  }, [targetEventId]);
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
@@ -70,20 +79,42 @@ export default function IndabaXGalleryPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox, closeLightbox, move]);
 
+  // When a specific event is targeted, only show that event's data
+  const eventsToShow = targetEventId
+    ? events.filter((e) => e.id === targetEventId)
+    : events;
+
+  const targetEvent = targetEventId ? events.find((e) => e.id === targetEventId) : null;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       <p className="text-indabax-green font-semibold tracking-widest text-sm mb-3">GALLERY</p>
-      <h1 className="font-display text-4xl font-bold mb-12">Event Photos</h1>
 
-      {events.length === 0 ? (
+      {targetEventId ? (
+        <div className="mb-12">
+          <Link
+            to="/indabax/gallery"
+            className="inline-flex items-center gap-2 text-sm text-indabax-green font-semibold mb-4 hover:text-indabax-green-dark transition-colors"
+          >
+            <ArrowLeft size={16} /> All albums
+          </Link>
+          <h1 className="font-display text-4xl font-bold">
+            {targetEvent ? targetEvent.title : "Loading album…"}
+          </h1>
+        </div>
+      ) : (
+        <h1 className="font-display text-4xl font-bold mb-12">Event Photos</h1>
+      )}
+
+      {eventsToShow.length === 0 ? (
         <p className="text-center text-[--color-text-body]">No events with photos yet.</p>
       ) : (
-        events.map((e) => {
+        eventsToShow.map((e) => {
           const images = imagesByEvent[e.id] || [];
           if (images.length === 0) return null;
           return (
-            <div key={e.id} className="mb-16">
-              <h2 className="font-display text-2xl font-bold mb-6">{e.title}</h2>
+            <div key={e.id} id={`event-${e.id}`} className="mb-16 scroll-mt-24">
+              {!targetEventId && <h2 className="font-display text-2xl font-bold mb-6">{e.title}</h2>}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {images.map((img, i) => (
                   <div key={img.id} className="group relative rounded-xl overflow-hidden h-40">
