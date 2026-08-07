@@ -36,7 +36,7 @@ export default function DataTable({ columns, data, onEdit, onDelete, idField = "
                   key={col.key}
                   className="px-4 py-3 max-w-[220px] truncate text-text-body"
                 >
-                  {formatValue(row[col.key])}
+                  {col.render ? col.render(row) : formatValue(row[col.key])}
                 </td>
               ))}
               <td className="px-4 py-3 text-right whitespace-nowrap">

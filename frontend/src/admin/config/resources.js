@@ -142,6 +142,31 @@ export const resourceConfigs = {
     columns: ["name", "role", "year", "site"],
   },
 
+  gallery: {
+    title: "Gallery",
+    endpoint: "/gallery",
+    idField: "id",
+    canCreate: true,
+    canUpdate: true,
+    canDelete: true,
+    listParams: [{ name: "event_id", label: "Event ID", default: "" }],
+    fields: [
+      {
+        name: "event_id",
+        label: "Event",
+        type: "async-select",
+        required: true,
+        endpoint: "/events/",
+        endpointParams: { site: "indabax", limit: 100 },
+        optionValue: "id",
+        optionLabel: "title",
+      },
+      { name: "image_url", label: "Image URL", type: "text", required: true },
+      { name: "caption", label: "Caption", type: "text" },
+    ],
+    columns: ["image_url", "event_id"],
+  },
+
   research: {
     title: "Research Papers",
     endpoint: "/research-papers",

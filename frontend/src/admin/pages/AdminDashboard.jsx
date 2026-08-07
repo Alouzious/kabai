@@ -7,6 +7,7 @@ const links = [
   { to: "/admin/categories", label: "Categories", hint: "Tags for projects & research" },
   { to: "/admin/core-values", label: "Core Values", hint: "About page pillars" },
   { to: "/admin/events", label: "Events", hint: "Workshops and meetups" },
+  { to: "/admin/gallery", label: "Gallery", hint: "Event photo albums" },
   { to: "/admin/team", label: "Team Members", hint: "Leadership and alumni" },
   { to: "/admin/research", label: "Research Papers", hint: "Published papers" },
 ];
