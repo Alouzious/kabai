@@ -1,14 +1,38 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
-
+const ROLE_ORDER = [
+  "Community Patron",
+  "Club President",
+  "Vice President",
+  "Speaker",
+  "Secretary",
+  "Technical Lead",
+  "Year Two Representative",
+  "Women Lead",
+  "Social Media Lead",
+  "Graphic Designer",
+  "Event Planner",
+];
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
-
   useEffect(() => {
-    api.get("/team/", { params: { site: "indabax" } }).then((r) => setTeam(r.data.filter((m) => m.is_current))).catch(() => {});
+    api
+      .get("/team/", { params: { site: "indabax" } })
+      .then((r) =>
+        setTeam(
+          r.data
+            .filter((m) => m.is_current)
+            .sort(
+              (a, b) =>
+                (ROLE_ORDER.indexOf(a.role) === -1 ? 999 : ROLE_ORDER.indexOf(a.role)) -
+                (ROLE_ORDER.indexOf(b.role) === -1 ? 999 : ROLE_ORDER.indexOf(b.role))
+            )
+        )
+      )
+      .catch(() => {});
   }, []);
-
   return (
     <section className="px-6 py-24 max-w-7xl mx-auto">
       <div className="text-center mb-16">
@@ -20,19 +44,21 @@ export default function IndabaXTeamPreview() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {team.map((m) => (
-            <div key={m.id} className="bg-white rounded-xl overflow-hidden border border-indabax-green/20 hover:border-indabax-green transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-              <div className="h-52 bg-indabax-green/10 overflow-hidden">
-                {m.photo_url && (
-                  <img
-                    src={m.photo_url}
-                    alt={m.name}
-                    className="w-full h-full object-cover object-top"
-                  />
+            <div key={m.id} className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 text-left w-full border border-transparent hover:border-indabax-green/40 hover:-translate-y-1">
+              <div className="h-64 overflow-hidden bg-indabax-green/10">
+                {m.photo_url ? (
+                  <img src={m.photo_url} alt={m.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-indabax-green/30">
+                    <FaCircleUser size={72} />
+                  </div>
                 )}
               </div>
-              <div className="p-4 text-center">
-                <h3 className="font-bold text-sm text-indabax-black">{m.name}</h3>
-                <p className="text-indabax-green text-xs uppercase tracking-wide">{m.role}</p>
+              <div className="p-5 text-center">
+                <h3 className="font-semibold text-lg text-black">{m.name}</h3>
+                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-3 bg-indabax-green/10 text-indabax-green-dark group-hover:bg-indabax-green group-hover:text-black transition-colors">
+                  {m.role}
+                </span>
               </div>
             </div>
           ))}

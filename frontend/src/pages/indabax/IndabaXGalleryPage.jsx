@@ -1,6 +1,30 @@
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import api from "../../lib/api";
+
+function optimized(url) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+  return url.replace("/image/upload/", "/image/upload/w_800,q_auto,f_auto/");
+}
+
+function downloadImage(url, name = "photo") {
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const objectUrl = URL.createObjectURL(blob);
+      const ext = (url.split(".").pop() || "jpg").split("?")[0].slice(0, 5);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = `${name}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    })
+    .catch(() => {
+      window.open(url, "_blank");
+    });
+}
 
 export default function IndabaXGalleryPage() {
   const [events, setEvents] = useState([]);
@@ -11,12 +35,40 @@ export default function IndabaXGalleryPage() {
     api.get("/events/", { params: { site: "indabax" } }).then((res) => {
       setEvents(res.data);
       res.data.forEach((e) => {
-        api.get("/gallery/", { params: { event_id: e.id } }).then((r) => {
-          setImagesByEvent((prev) => ({ ...prev, [e.id]: r.data }));
-        });
+        let all = [];
+        const fetchPage = (skip) =>
+          api.get("/gallery/", { params: { event_id: e.id, limit: 200, skip } }).then((r) => {
+            all = all.concat(r.data);
+            if (r.data.length === 200) return fetchPage(skip + 200);
+            setImagesByEvent((prev) => ({ ...prev, [e.id]: all }));
+          });
+        fetchPage(0);
       });
     });
   }, []);
+
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  const move = useCallback(
+    (dir) => {
+      if (!lightbox) return;
+      const images = lightbox.images;
+      const next = (lightbox.index + dir + images.length) % images.length;
+      setLightbox({ ...lightbox, index: next });
+    },
+    [lightbox]
+  );
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") move(-1);
+      if (e.key === "ArrowRight") move(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, closeLightbox, move]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -33,10 +85,19 @@ export default function IndabaXGalleryPage() {
             <div key={e.id} className="mb-16">
               <h2 className="font-display text-2xl font-bold mb-6">{e.title}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {images.map((img) => (
-                  <button key={img.id} onClick={() => setLightbox(img.image_url)} className="rounded-xl overflow-hidden h-40">
-                    <img src={img.image_url} alt={e.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                  </button>
+                {images.map((img, i) => (
+                  <div key={img.id} className="group relative rounded-xl overflow-hidden h-40">
+                    <button onClick={() => setLightbox({ images, index: i })} className="w-full h-full">
+                      <img src={optimized(img.image_url)} alt={e.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    </button>
+                    <button
+                      onClick={() => downloadImage(img.image_url, e.title)}
+                      title="Download photo"
+                      className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-indabax-green hover:text-black transition-colors"
+                    >
+                      <Download size={16} />
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -45,11 +106,51 @@ export default function IndabaXGalleryPage() {
       )}
 
       {lightbox && (
-        <div className="fixed inset-0 bg-indabax-black/90 z-50 flex items-center justify-center px-6" onClick={() => setLightbox(null)}>
-          <button className="absolute top-6 right-6 text-white" onClick={() => setLightbox(null)}>
+        <div
+          className="fixed inset-0 bg-indabax-black/90 z-50 flex items-center justify-center px-6"
+          onClick={closeLightbox}
+        >
+          <button className="absolute top-6 right-6 text-white hover:text-indabax-green" onClick={closeLightbox}>
             <X size={32} />
           </button>
-          <img src={lightbox} alt="Selected" className="max-h-[85vh] max-w-full rounded-xl" />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              move(-1);
+            }}
+            className="absolute left-4 md:left-8 text-white hover:text-indabax-green"
+            aria-label="Previous photo"
+          >
+            <ChevronLeft size={44} />
+          </button>
+          <img
+            src={optimized(lightbox.images[lightbox.index].image_url)}
+            alt="Selected"
+            className="max-h-[85vh] max-w-full rounded-xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              move(1);
+            }}
+            className="absolute right-4 md:right-8 text-white hover:text-indabax-green"
+            aria-label="Next photo"
+          >
+            <ChevronRight size={44} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadImage(lightbox.images[lightbox.index].image_url);
+            }}
+            className="absolute bottom-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full bg-indabax-green text-black font-semibold hover:bg-white transition-colors"
+          >
+            <Download size={18} /> Download
+          </button>
+          <p className="absolute bottom-6 left-6 text-white/80 font-medium">
+            {lightbox.index + 1} / {lightbox.images.length}
+          </p>
         </div>
       )}
     </div>
