@@ -8,6 +8,13 @@ function optimized(url) {
   return url.replace("/image/upload/", "/image/upload/w_800,q_auto,f_auto/");
 }
 
+function toTitleCase(str) {
+  if (!str) return str;
+  // Only normalize if entire string is uppercase
+  if (str !== str.toUpperCase()) return str;
+  return str.toLowerCase().split(" ").map((w) => (w[0]?.match(/[a-z]/) ? w.charAt(0).toUpperCase() + w.slice(1) : w.charAt(0).toUpperCase() + w.slice(1))).join(" ").replace(/\b29Th\b/g, "29th");
+}
+
 function downloadImage(url, name = "photo") {
   fetch(url)
     .then((res) => res.blob())
@@ -99,7 +106,7 @@ export default function IndabaXGalleryPage() {
             <ArrowLeft size={16} /> All albums
           </Link>
           <h1 className="font-display text-4xl font-bold">
-            {targetEvent ? targetEvent.title : "Loading album…"}
+            {targetEvent ? toTitleCase(targetEvent.title) : "Loading album…"}
           </h1>
         </div>
       ) : (
@@ -108,32 +115,59 @@ export default function IndabaXGalleryPage() {
 
       {eventsToShow.length === 0 ? (
         <p className="text-center text-[--color-text-body]">No events with photos yet.</p>
-      ) : (
+      ) : targetEventId ? (
+        // Single album view: show all photos for that event
         eventsToShow.map((e) => {
           const images = imagesByEvent[e.id] || [];
-          if (images.length === 0) return null;
+          if (images.length === 0) return <p key={e.id} className="text-center text-[--color-text-body]">No photos in this album yet.</p>;
           return (
-            <div key={e.id} id={`event-${e.id}`} className="mb-16 scroll-mt-24">
-              {!targetEventId && <h2 className="font-display text-2xl font-bold mb-6">{e.title}</h2>}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {images.map((img, i) => (
-                  <div key={img.id} className="group relative rounded-xl overflow-hidden h-40">
-                    <button onClick={() => setLightbox({ images, index: i })} className="w-full h-full">
-                      <img src={optimized(img.image_url)} alt={e.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </button>
-                    <button
-                      onClick={() => downloadImage(img.image_url, e.title)}
-                      title="Download photo"
-                      className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-indabax-green hover:text-black transition-colors"
-                    >
-                      <Download size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
+            <div key={e.id} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {images.map((img, i) => (
+                <div key={img.id} className="group relative rounded-xl overflow-hidden h-40">
+                  <button onClick={() => setLightbox({ images, index: i })} className="w-full h-full">
+                    <img src={optimized(img.image_url)} alt={toTitleCase(e.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  </button>
+                  <button
+                    onClick={() => downloadImage(img.image_url, toTitleCase(e.title))}
+                    title="Download photo"
+                    className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-indabax-green hover:text-black transition-colors"
+                  >
+                    <Download size={16} />
+                  </button>
+                </div>
+              ))}
             </div>
           );
         })
+      ) : (
+        // Album overview: one card per gallery
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {eventsToShow.map((e) => {
+            const images = imagesByEvent[e.id] || [];
+            const cover = images[0]?.image_url || e.banner_url;
+            const count = images.length;
+            return (
+              <Link
+                key={e.id}
+                to={`/indabax/gallery?event=${e.id}`}
+                className="group bg-white rounded-2xl overflow-hidden border border-border-soft hover:border-indabax-green/40 hover:shadow-xl transition-all duration-300 flex flex-col"
+              >
+                <div className="h-48 sm:h-56 overflow-hidden bg-cream">
+                  {cover ? (
+                    <img src={optimized(cover)} alt={toTitleCase(e.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/40 bg-indabax-black">No cover</div>
+                  )}
+                </div>
+                <div className="p-5 flex-1 flex flex-col">
+                  <h2 className="font-display font-bold text-lg leading-snug group-hover:text-indabax-green transition-colors">{toTitleCase(e.title)}</h2>
+                  <p className="text-sm text-[--color-text-body] mt-2">{count} {count === 1 ? "photo" : "photos"}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indabax-green group-hover:text-indabax-green-dark">Open album →</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       )}
 
       {lightbox && (

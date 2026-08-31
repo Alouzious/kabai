@@ -20,6 +20,16 @@ def create_partner(db: Session, partner_in: PartnerCreate):
     return partner
 
 
+def update_partner(db: Session, partner_id: uuid.UUID, partner_in):
+    partner = db.query(Partner).filter(Partner.id == partner_id, Partner.is_deleted == False).first()
+    if partner:
+        for k, v in partner_in.model_dump(exclude_unset=True).items():
+            setattr(partner, k, v)
+        db.commit()
+        db.refresh(partner)
+    return partner
+
+
 def delete_partner(db: Session, partner_id: uuid.UUID):
     partner = db.query(Partner).filter(Partner.id == partner_id, Partner.is_deleted == False).first()
     if partner:

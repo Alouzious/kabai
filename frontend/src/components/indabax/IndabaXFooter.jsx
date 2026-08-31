@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function IndabaXFooter() {
   return (
@@ -20,8 +21,8 @@ export default function IndabaXFooter() {
             The AI community track of KAB AI at Kabale University.
           </p>
           <div className="flex gap-3 mt-4 justify-center sm:justify-start">
-            <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaTwitter size={16} /></a>
-            <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaLinkedin size={16} /></a>
+            <a href="https://x.com/indabaxkab/status/2049100203978797401" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition" title="IndabaX Kabale on X"><FaXTwitter size={16} /></a>
+            <a href="https://ug.linkedin.com/in/indabax-ai-kabale-331a9534a" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition" title="IndabaX AI Kabale on LinkedIn"><FaLinkedin size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-indabax-green hover:text-indabax-black transition"><FaGithub size={16} /></a>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -13,8 +14,8 @@ export default function Footer() {
             Advancing AI education and community-driven innovation at Kabale University.
           </p>
           <div className="flex gap-3 mt-4 justify-center sm:justify-start">
-            <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaTwitter size={16} /></a>
-            <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaLinkedin size={16} /></a>
+            <a href="https://x.com/kabuniversity" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-accent transition" title="Kabale University on X"><FaXTwitter size={16} /></a>
+            <a href="https://ug.linkedin.com/company/kabaleuniversity" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-accent transition" title="Kabale University on LinkedIn"><FaLinkedin size={16} /></a>
             <a href="#" className="bg-white/10 p-2 rounded-full hover:bg-accent transition"><FaGithub size={16} /></a>
           </div>
         </div>
@@ -40,7 +41,7 @@ export default function Footer() {
 
         <div>
           <h4 className="font-semibold mb-3 border-b border-accent inline-block pb-1 text-sm sm:text-base">Contact Info</h4>
-          <p className="text-sm text-white/70 mt-2">Kabale University, Kabale, Uganda</p>
+          <a href="https://www.kab.ac.ug/" target="_blank" rel="noreferrer" className="block text-sm text-white/70 mt-2 hover:text-accent transition">Kabale University, Kabale, Uganda</a>
           <p className="text-sm text-white/70 mt-1">kabai@kab.ac.ug</p>
         </div>
       </div>

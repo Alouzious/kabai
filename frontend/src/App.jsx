@@ -7,6 +7,7 @@ import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import ResearchPage from "./pages/ResearchPage";
+import DatasetsPage from "./pages/DatasetsPage";
 import BlogPage from "./pages/BlogPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
 import TeamPage from "./pages/TeamPage";
@@ -32,6 +33,7 @@ import AdminEvents from "./admin/pages/AdminEvents";
 import AdminGallery from "./admin/pages/AdminGallery";
 import AdminTeam from "./admin/pages/AdminTeam";
 import AdminResearch from "./admin/pages/AdminResearch";
+import AdminPartners from "./admin/pages/AdminPartners";
 
 function App() {
   return (
@@ -44,6 +46,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:slug" element={<ProjectDetailPage />} />
             <Route path="/research" element={<ResearchPage />} />
+            <Route path="/datasets" element={<DatasetsPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/team" element={<TeamPage />} />
@@ -73,6 +76,7 @@ function App() {
             <Route path="gallery" element={<AdminGallery />} />
             <Route path="team" element={<AdminTeam />} />
             <Route path="research" element={<AdminResearch />} />
+            <Route path="partners" element={<AdminPartners />} />
           </Route>
         </Routes>
       </AuthProvider>
