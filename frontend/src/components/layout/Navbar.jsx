@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ChevronDown, Mail, Phone } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Mail } from "lucide-react";
 import api from "../../lib/api";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [workOpen, setWorkOpen] = useState(false);
   const [communitiesOpen, setCommunitiesOpen] = useState(false);
+  const [projectSubOpen, setProjectSubOpen] = useState(false);
+  const [pubSubOpen, setPubSubOpen] = useState(false);
 
   const [projectCats, setProjectCats] = useState([]);
   const [pubCats, setPubCats] = useState([]);
@@ -18,12 +20,11 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="hidden md:flex bg-accent text-charcoal px-6 py-1 items-center justify-between" style={{ minHeight: '30px' }}>
-        <div className="flex items-center gap-8">
-          <span className="flex items-center gap-1.5 font-display text-[14px] leading-none text-black"><Mail size={13} /> kabai@kab.ac.ug</span>
-          <span className="flex items-center gap-1.5 font-display text-[14px] leading-none text-black"><Phone size={13} /> (+256) 782 860 259</span>
+      <div className="hidden md:flex bg-accent text-charcoal px-12 md:px-16 lg:px-20 py-1 items-center justify-between" style={{ minHeight: '30px' }}>
+        <div className="flex items-center gap-8 ml-4 md:ml-6">
+          <span className="flex items-center gap-1.5 text-[14px] leading-none text-black" style={{ fontFamily: '"Times New Roman", Times, serif' }}><Mail size={13} /> kabai@kab.ac.ug</span>
         </div>
-        <span className="font-display text-[14px] leading-none tracking-wide uppercase text-[#0072BB]">KAB AI · Kabale University</span>
+        <span className="text-[14px] leading-none tracking-wide uppercase text-[#0072BB] mr-6 md:mr-8 lg:mr-10" style={{ fontFamily: '"Times New Roman", Times, serif' }}>Kabale University</span>
       </div>
 
       <div className="bg-charcoal text-white relative">
@@ -38,34 +39,48 @@ export default function Navbar() {
             <Link to="/" className="hover:text-accent transition">Home</Link>
             <Link to="/about" className="hover:text-accent transition">About</Link>
 
-            <div className="relative" onMouseEnter={() => setWorkOpen(true)} onMouseLeave={() => setWorkOpen(false)}>
+            <div className="relative" onMouseEnter={() => setWorkOpen(true)} onMouseLeave={() => { setWorkOpen(false); setProjectSubOpen(false); setPubSubOpen(false); }}>
               <button className="flex items-center gap-1 hover:text-accent transition">
                 Our Work <ChevronDown size={14} />
               </button>
               {workOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 bg-white text-charcoal rounded-lg shadow-xl py-6 px-8 w-[480px] lg:w-[520px] grid grid-cols-2 gap-8 z-20">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-charcoal/50 mb-3">Projects</p>
-                    <Link to="/projects" className="block py-1.5 text-sm font-semibold text-accent hover:text-accent-light">
-                      All Projects
+                <div className="absolute top-full left-1/2 -translate-x-1/2 bg-white/70 backdrop-blur-md text-charcoal rounded-lg shadow-xl py-2 w-56 z-20 border border-white/40">
+                  {/* Projects with nested */}
+                  <div className="relative" onMouseEnter={() => setProjectSubOpen(true)} onMouseLeave={() => setProjectSubOpen(false)}>
+                    <Link to="/projects" className="flex items-center justify-between px-4 py-2 hover:bg-white/80 text-sm font-medium">
+                      Projects <ChevronRight size={14} className="text-charcoal/50" />
                     </Link>
-                    {projectCats.map((c) => (
-                      <Link key={c.id} to={`/projects?category=${c.slug}`} className="block py-1.5 text-sm hover:text-accent transition">
-                        {c.name}
-                      </Link>
-                    ))}
+                    {projectSubOpen && (
+                      <div className="absolute left-full top-0 ml-1 bg-white/70 backdrop-blur-md text-charcoal rounded-lg shadow-xl py-2 w-56 z-30 border border-white/40">
+                        <Link to="/projects" className="block px-4 py-2 hover:bg-white/80 text-sm font-semibold text-accent">Research Projects</Link>
+                        {projectCats.map((c) => (
+                          <Link key={c.id} to={`/projects?category=${c.slug}`} className="block px-4 py-2 hover:bg-white/80 text-sm">
+                            {c.name}
+                          </Link>
+                        ))}
+                        {projectCats.length === 0 && <span className="block px-4 py-2 text-sm text-charcoal/50">No categories</span>}
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-charcoal/50 mb-3">Publications</p>
-                    <Link to="/research" className="block py-1.5 text-sm font-semibold text-accent hover:text-accent-light">
-                      All Publications
+                  {/* Publications with nested */}
+                  <div className="relative" onMouseEnter={() => setPubSubOpen(true)} onMouseLeave={() => setPubSubOpen(false)}>
+                    <Link to="/research" className="flex items-center justify-between px-4 py-2 hover:bg-white/80 text-sm font-medium">
+                      Publications <ChevronRight size={14} className="text-charcoal/50" />
                     </Link>
-                    {pubCats.map((c) => (
-                      <Link key={c.id} to={`/research?category=${c.slug}`} className="block py-1.5 text-sm hover:text-accent transition">
-                        {c.name}
-                      </Link>
-                    ))}
+                    {pubSubOpen && (
+                      <div className="absolute left-full top-0 ml-1 bg-white/70 backdrop-blur-md text-charcoal rounded-lg shadow-xl py-2 w-56 z-30 border border-white/40">
+                        <Link to="/research" className="block px-4 py-2 hover:bg-white/80 text-sm font-semibold text-accent">All Publications</Link>
+                        {pubCats.map((c) => (
+                          <Link key={c.id} to={`/research?category=${c.slug}`} className="block px-4 py-2 hover:bg-white/80 text-sm">
+                            {c.name}
+                          </Link>
+                        ))}
+                        {pubCats.length === 0 && <span className="block px-4 py-2 text-sm text-charcoal/50">No categories</span>}
+                      </div>
+                    )}
                   </div>
+                  {/* Datasets independent */}
+                  <Link to="/datasets" className="block px-4 py-2 hover:bg-white/80 text-sm font-medium">Datasets</Link>
                 </div>
               )}
             </div>
@@ -78,7 +93,9 @@ export default function Navbar() {
               </button>
               {communitiesOpen && (
                 <div className="absolute top-full left-0 bg-white/70 backdrop-blur-md text-charcoal rounded-lg shadow-xl py-2 w-56 z-20 border border-white/40">
-                  <Link to="/indabax" className="block px-4 py-2 hover:bg-white/80 text-sm">IndabaX AI Club</Link>
+                  <Link to="/indabax" target="_blank" rel="noreferrer" className="block px-4 py-2 hover:bg-white/80 text-sm">IndabaX AI Club</Link>
+                  <a href="https://gdg.community.dev/gdg-on-campus-kabale-university-kabale-uganda/" target="_blank" rel="noreferrer" className="block px-4 py-2 hover:bg-white/80 text-sm">GDG on Campus</a>
+                  <span className="block px-4 py-2 text-sm text-charcoal/50 cursor-not-allowed">Youth Mappers</span>
                 </div>
               )}
             </div>
@@ -103,11 +120,27 @@ export default function Navbar() {
         <div className="md:hidden bg-charcoal-light px-4 sm:px-6 py-4 flex flex-col gap-1 text-sm text-white max-h-[calc(100vh-4rem)] overflow-y-auto">
           <Link to="/" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">Home</Link>
           <Link to="/about" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">About</Link>
-          <Link to="/projects" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">Projects</Link>
-          <Link to="/research" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">Publications</Link>
+          <div className="py-2.5 border-b border-white/10">
+            <p className="font-bold text-white/50 text-xs uppercase tracking-wide mb-2">Our Work</p>
+            <Link to="/projects" onClick={() => setOpen(false)} className="block py-1.5 pl-2 font-semibold text-accent">Research Projects</Link>
+            {projectCats.map((c) => (
+              <Link key={c.id} to={`/projects?category=${c.slug}`} onClick={() => setOpen(false)} className="block py-1 pl-6 text-sm text-white/80">
+                • {c.name}
+              </Link>
+            ))}
+            <Link to="/research" onClick={() => setOpen(false)} className="block py-1.5 pl-2 font-semibold text-accent mt-2">Publications</Link>
+            {pubCats.map((c) => (
+              <Link key={c.id} to={`/research?category=${c.slug}`} onClick={() => setOpen(false)} className="block py-1 pl-6 text-sm text-white/80">
+                • {c.name}
+              </Link>
+            ))}
+            <Link to="/datasets" onClick={() => setOpen(false)} className="block py-1.5 pl-2 font-semibold text-accent mt-2">Datasets</Link>
+          </div>
           <Link to="/blog" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">Blog</Link>
           <Link to="/team" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">Team</Link>
-          <Link to="/indabax" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">IndabaX AI Club</Link>
+          <Link to="/indabax" target="_blank" rel="noreferrer" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">IndabaX AI Club</Link>
+          <a href="https://gdg.community.dev/gdg-on-campus-kabale-university-kabale-uganda/" target="_blank" rel="noreferrer" onClick={() => setOpen(false)} className="py-2.5 border-b border-white/10">GDG on Campus</a>
+          <span className="py-2.5 border-b border-white/10 text-white/50">Youth Mappers</span>
           <Link
             to="/contact"
             onClick={() => setOpen(false)}

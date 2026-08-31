@@ -13,6 +13,7 @@ const navItems = [
   { to: "/admin/gallery", label: "Gallery" },
   { to: "/admin/team", label: "Team" },
   { to: "/admin/research", label: "Research" },
+  { to: "/admin/partners", label: "Partners" },
 ];
 
 export default function AdminLayout() {

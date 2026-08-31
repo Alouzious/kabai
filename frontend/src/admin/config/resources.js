@@ -167,6 +167,23 @@ export const resourceConfigs = {
     columns: ["image_url", "event_id"],
   },
 
+  partners: {
+    title: "Partners",
+    endpoint: "/partners",
+    idField: "id",
+    canCreate: true,
+    canUpdate: true,
+    canDelete: true,
+    listParams: [{ name: "site", label: "Site", default: "main" }],
+    fields: [
+      { name: "site", label: "Site", type: "text", default: "main", required: true },
+      { name: "name", label: "Name", type: "text", required: true },
+      { name: "logo_url", label: "Logo URL", type: "text", required: true },
+      { name: "website_url", label: "Website URL", type: "text" },
+    ],
+    columns: ["name", "logo_url", "site", "website_url"],
+  },
+
   research: {
     title: "Research Papers",
     endpoint: "/research-papers",

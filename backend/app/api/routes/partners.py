@@ -10,6 +10,13 @@ from app.api.deps import get_current_super_admin
 router = APIRouter(prefix="/api/v1/partners", tags=["partners"])
 
 
+@router.put("/{partner_id}", response_model=PartnerOut)
+def update_partner(
+    partner_id: uuid.UUID, partner_in: PartnerCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)
+):
+    return crud.update_partner(db, partner_id, partner_in)
+
+
 @router.get("/", response_model=list[PartnerOut])
 def list_partners(
     site: str = None,
