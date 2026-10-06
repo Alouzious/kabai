@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../lib/api";
 
-const SLIDES = [
+const FALLBACK_SLIDES = [
   {
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1600&auto=format&fit=crop",
     title: "IndabaX Kabale",
@@ -40,19 +41,43 @@ const SLIDES = [
   },
 ];
 
+function toSlide(s) {
+  const [title, ...rest] = (s.caption || "").split("|").map((t) => t.trim());
+  return { image: s.image_url, title: title || "IndabaX Kabale", subtitle: rest.join(" | ") };
+}
+
 export default function IndabaXHero() {
+  const [slides, setSlides] = useState(FALLBACK_SLIDES);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    let alive = true;
+    api
+      .get("/slides/", { params: { site: "indabax" } })
+      .then((res) => {
+        const data = (res.data || [])
+          .filter((x) => x.is_active !== false)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        if (!alive || data.length === 0) return;
+        setSlides(data.map(toSlide));
+        setIndex(0);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % SLIDES.length);
+      setIndex((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   return (
     <section className="relative text-white px-6 pt-32 md:pt-40 pb-6 md:pb-10 text-center overflow-hidden min-h-[600px] flex items-end">
-      {SLIDES.map((slide, i) => (
+      {slides.map((slide, i) => (
         <div
           key={slide.image}
           className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
@@ -69,7 +94,7 @@ export default function IndabaXHero() {
       <div className="absolute inset-0 bg-black/25 z-10" />
 
       <button
-        onClick={() => setIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)}
+        onClick={() => setIndex((prev) => (prev - 1 + slides.length) % slides.length)}
         aria-label="Previous slide"
         className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/40 hover:bg-indabax-green text-white hover:text-black transition-colors"
       >
@@ -78,7 +103,7 @@ export default function IndabaXHero() {
 
       <div className="w-full max-w-3xl mx-auto relative z-20">
 
-        {SLIDES.map((slide, i) => (
+        {slides.map((slide, i) => (
           <div
             key={`${slide.title}-${i === index ? "active" : "idle"}`}
             className={`transition-all duration-700 ${
@@ -110,7 +135,7 @@ export default function IndabaXHero() {
         ))}
 
         <div className="flex justify-center gap-2 mt-8">
-          {SLIDES.map((_, i) => (
+          {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setIndex(i)}
@@ -124,7 +149,7 @@ export default function IndabaXHero() {
       </div>
 
       <button
-        onClick={() => setIndex((prev) => (prev + 1) % SLIDES.length)}
+        onClick={() => setIndex((prev) => (prev + 1) % slides.length)}
         aria-label="Next slide"
         className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/40 hover:bg-indabax-green text-white hover:text-black transition-colors"
       >
