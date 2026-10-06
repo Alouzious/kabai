@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
+import ImageUpload from "./ImageUpload";
 
 export default function BulkAddGalleryImages({ onAdded }) {
   const [events, setEvents] = useState([]);
@@ -15,6 +16,12 @@ export default function BulkAddGalleryImages({ onAdded }) {
       .then((res) => setEvents(res.data))
       .catch(() => setEvents([]));
   }, []);
+
+  const urlCount = urlsText.split("\n").map((u) => u.trim()).filter(Boolean).length;
+
+  function appendUrl(url) {
+    setUrlsText((prev) => (prev.trim() ? prev.replace(/\s+$/, "") + "\n" + url : url));
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,7 +39,7 @@ export default function BulkAddGalleryImages({ onAdded }) {
       .filter(Boolean);
 
     if (urls.length === 0) {
-      setError("Paste at least one image URL.");
+      setError("Upload photos or paste at least one image URL.");
       return;
     }
 
@@ -85,17 +92,31 @@ export default function BulkAddGalleryImages({ onAdded }) {
       </div>
 
       <div className="mt-4">
-        <label className="block text-sm font-medium text-charcoal mb-1.5">
-          Image URLs <span className="text-accent">*</span>
-          <span className="text-text-body/50 font-normal"> — one per line</span>
-        </label>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
+          <label className="block text-sm font-medium text-charcoal">
+            Images <span className="text-accent">*</span>
+            <span className="text-text-body/50 font-normal"> — upload files or paste URLs, one per line</span>
+          </label>
+          <ImageUpload
+            folder="gallery"
+            multiple
+            label="Upload photos"
+            className="bg-accent hover:bg-accent-light text-charcoal font-semibold text-sm rounded-md px-4 py-2 transition-colors disabled:opacity-60"
+            onUploaded={appendUrl}
+          />
+        </div>
         <textarea
           rows={6}
           value={urlsText}
           onChange={(e) => setUrlsText(e.target.value)}
-          placeholder={"https://res.cloudinary.com/.../photo1.jpg\nhttps://res.cloudinary.com/.../photo2.jpg"}
+          placeholder={"Uploaded photo links appear here.\nYou can also paste image URLs, one per line."}
           className="w-full px-3 py-2 border border-border-soft rounded-md text-sm text-text-body bg-cream focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent font-mono"
         />
+        {urlCount > 0 && (
+          <p className="text-xs text-text-body/60 mt-1">
+            {urlCount} image{urlCount === 1 ? "" : "s"} ready to add
+          </p>
+        )}
       </div>
 
       {error && (

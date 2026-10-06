@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
+import ImageUpload from "./ImageUpload";
+
+const IMAGE_NAME = /(image|photo|logo|avatar|thumbnail|cover)/i;
+
+function isImageField(f) {
+  if (f.noUpload) return false;
+  if (f.type === "image") return true;
+  return (!f.type || f.type === "text") && IMAGE_NAME.test(f.name);
+}
 
 export default function AdminForm({ fields, initialValues, onSubmit, onCancel, submitLabel = "Save" }) {
   const [values, setValues] = useState({});
@@ -78,7 +87,9 @@ export default function AdminForm({ fields, initialValues, onSubmit, onCancel, s
         {fields.map((f) => (
           <div
             key={f.name}
-            className={f.type === "textarea" ? "sm:col-span-2" : ""}
+            className={
+              f.type === "textarea" || isImageField(f) ? "sm:col-span-2" : ""
+            }
           >
             <label className="block text-sm font-medium text-charcoal mb-1.5">
               {f.label}
@@ -118,8 +129,42 @@ export default function AdminForm({ fields, initialValues, onSubmit, onCancel, s
 const inputClass =
   "w-full px-3 py-2 border border-border-soft rounded-md text-sm text-text-body bg-cream focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent";
 
+const uploadBtnClass =
+  "bg-accent hover:bg-accent-light text-charcoal font-semibold text-sm rounded-md px-4 py-2 transition-colors whitespace-nowrap disabled:opacity-60";
+
 function renderInput(field, values, handleChange, asyncOptions = {}) {
   const value = values[field.name] ?? "";
+
+  if (isImageField(field)) {
+    return (
+      <div>
+        <div className="flex gap-2 items-start">
+          <input
+            type="text"
+            value={value}
+            placeholder="Paste an image URL, or upload a file"
+            onChange={(e) => handleChange(field.name, e.target.value)}
+            className={inputClass}
+          />
+          <ImageUpload
+            folder={field.folder || "kabai"}
+            label="Upload"
+            className={uploadBtnClass}
+            onUploaded={(url) => handleChange(field.name, url)}
+          />
+        </div>
+        {value && (
+          <img
+            src={value}
+            alt=""
+            className="mt-2 h-24 rounded-md border border-border-soft object-cover"
+            onError={(e) => (e.currentTarget.style.display = "none")}
+            onLoad={(e) => (e.currentTarget.style.display = "block")}
+          />
+        )}
+      </div>
+    );
+  }
 
   if (field.type === "textarea") {
     return (
@@ -145,7 +190,6 @@ function renderInput(field, values, handleChange, asyncOptions = {}) {
       </label>
     );
   }
-
 
   if (field.type === "async-select") {
     const options = asyncOptions[field.name] || [];
