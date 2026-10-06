@@ -150,6 +150,27 @@ export default function AdminResourcePage({ resourceKey }) {
                 </div>
               );
             }
+            if (p.type === "select") {
+              return (
+                <div key={p.name} className="flex items-center gap-2">
+                  <label className="text-sm text-text-body/70">{p.label}</label>
+                  <select
+                    value={filters[p.name] ?? ""}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, [p.name]: e.target.value }))
+                    }
+                    className="text-sm px-2.5 py-1.5 border border-border-soft rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent w-40 sm:w-auto"
+                  >
+                    <option value="">All</option>
+                    {p.options.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            }
             return (
               <div key={p.name} className="flex items-center gap-2">
                 <label className="text-sm text-text-body/70">{p.label}</label>
