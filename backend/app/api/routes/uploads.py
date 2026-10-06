@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 
-from app.core.cloudinary_client import upload_file
+from starlette.concurrency import run_in_threadpool
+
+from app.core.local_storage import save_image
 from app.api.deps import get_current_super_admin
 
 router = APIRouter(prefix="/api/v1/uploads", tags=["uploads"])
@@ -26,7 +28,7 @@ def detect_image_type(data: bytes) -> str | None:
 @router.post("/image")
 async def upload_image(
     file: UploadFile = File(...),
-    folder: str = Query("kabai", description="Cloudinary folder, e.g. 'team', 'gallery', 'projects'"),
+    folder: str = Query("kabai", description="Folder, e.g. 'team', 'gallery', 'projects'"),
     _user=Depends(get_current_super_admin),
 ):
     contents = await file.read()
@@ -46,13 +48,8 @@ async def upload_image(
         raise HTTPException(status_code=400, detail=f"File too large (max {MAX_FILE_SIZE_MB}MB)")
 
     try:
-        result = upload_file(contents, folder=folder)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
-
-    return {
-        "url": result["secure_url"],
-        "public_id": result["public_id"],
-        "width": result.get("width"),
-        "height": result.get("height"),
-    }
+        return await run_in_threadpool(save_image, contents, folder)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=500, detail="Upload failed")
