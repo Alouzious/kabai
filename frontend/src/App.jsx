@@ -1,3 +1,4 @@
+import FaviconSwitcher from "./components/FaviconSwitcher";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import IndabaXLayout from "./layouts/IndabaXLayout";
@@ -39,7 +40,8 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
+        <FaviconSwitcher />
+      <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />}/>
