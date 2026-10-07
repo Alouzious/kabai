@@ -16,11 +16,8 @@ export default function TeamCard({ member: m, site = "main", index = 0 }) {
 
   if (site === "indabax") {
     return (
-      <Link
-        to={to}
-        className="group block h-full bg-white rounded-2xl shadow-sm hover:shadow-xl border border-transparent hover:border-indabax-green/40 hover:-translate-y-1 transition-all duration-300 px-4 py-7 text-center"
-      >
-        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 mx-auto rounded-full overflow-hidden ring-4 ring-black/5 group-hover:ring-indabax-green/40 shadow-md bg-white transition-all duration-300">
+      <Link to={to} className="group block text-center py-2">
+        <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 mx-auto rounded-full overflow-hidden ring-4 ring-black/5 group-hover:ring-indabax-green shadow-md bg-white group-hover:-translate-y-1 transition-all duration-300">
           {m.photo_url ? (
             <img
               src={m.photo_url}
@@ -29,11 +26,13 @@ export default function TeamCard({ member: m, site = "main", index = 0 }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-indabax-green/30">
-              <FaCircleUser size={96} />
+              <FaCircleUser size={110} />
             </div>
           )}
         </div>
-        <h3 className="mt-5 font-semibold text-lg text-black leading-snug">{m.name}</h3>
+        <h3 className="mt-5 font-semibold text-lg text-black leading-snug group-hover:text-indabax-green-dark transition-colors">
+          {m.name}
+        </h3>
         <span className="inline-block mt-2 px-4 py-1.5 rounded-full text-sm font-bold bg-indabax-green/10 text-indabax-green-dark group-hover:bg-indabax-green group-hover:text-black transition-colors">
           {m.role}
         </span>
