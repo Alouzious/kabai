@@ -92,18 +92,12 @@ export default function BulkAddGalleryImages({ onAdded }) {
       </div>
 
       <div className="mt-4">
-        <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
-          <label className="block text-sm font-medium text-charcoal">
-            Images <span className="text-accent">*</span>
-            <span className="text-text-body/50 font-normal"> — upload files or paste URLs, one per line</span>
-          </label>
-          <ImageUpload
-            folder="gallery"
-            multiple
-            label="Upload photos"
-            className="bg-accent hover:bg-accent-light text-charcoal font-semibold text-sm rounded-md px-4 py-2 transition-colors disabled:opacity-60"
-            onUploaded={appendUrl}
-          />
+        <label className="block text-sm font-medium text-charcoal mb-1.5">
+          Images <span className="text-accent">*</span>
+          <span className="text-text-body/50 font-normal"> — drop photos or a whole folder, or paste URLs, one per line</span>
+        </label>
+        <div className="mb-3">
+          <ImageUpload folder="gallery" multiple dropzone folderButton label="Upload photos" onUploaded={appendUrl} />
         </div>
         <textarea
           rows={6}

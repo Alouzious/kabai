@@ -10,6 +10,50 @@ function isHeic(file) {
   return /heic|heif/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
 }
 
+function looksLikeImage(file) {
+  return file.type.startsWith("image/") || isHeic(file) || /\.(jpe?g|png|webp|gif)$/i.test(file.name);
+}
+
+function byName(a, b) {
+  return a.name.localeCompare(b.name, undefined, { numeric: true });
+}
+
+function readAllEntries(reader) {
+  return new Promise((resolve, reject) => {
+    const all = [];
+    const next = () =>
+      reader.readEntries((batch) => {
+        if (!batch.length) return resolve(all);
+        all.push(...batch);
+        next();
+      }, reject);
+    next();
+  });
+}
+
+async function filesFromEntry(entry) {
+  if (entry.isFile) {
+    return new Promise((resolve) => entry.file((f) => resolve([f]), () => resolve([])));
+  }
+  if (entry.isDirectory) {
+    const entries = await readAllEntries(entry.createReader());
+    const nested = await Promise.all(entries.map(filesFromEntry));
+    return nested.flat();
+  }
+  return [];
+}
+
+// Must be called straight from the drop handler (before any await).
+async function collectDropped(dt) {
+  const items = Array.from(dt.items || []);
+  if (items.length && items[0].webkitGetAsEntry) {
+    const entries = items.map((i) => i.webkitGetAsEntry()).filter(Boolean);
+    const nested = await Promise.all(entries.map(filesFromEntry));
+    return nested.flat().filter(looksLikeImage).sort(byName);
+  }
+  return Array.from(dt.files || []).filter(looksLikeImage).sort(byName);
+}
+
 async function shrink(file) {
   if (file.type === "image/gif" || file.size < SKIP_BELOW) return file;
   try {
@@ -49,8 +93,10 @@ export default function ImageUpload({
   label = "Upload image",
   className = "",
   dropzone = false,
+  folderButton = false,
 }) {
   const inputRef = useRef(null);
+  const folderRef = useRef(null);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [problems, setProblems] = useState([]);
@@ -100,6 +146,31 @@ export default function ImageUpload({
     setOkCount(ok);
     setBusy(false);
     if (inputRef.current) inputRef.current.value = "";
+    if (folderRef.current) folderRef.current.value = "";
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    setDragOver(false);
+    if (busy) return;
+    collectDropped(e.dataTransfer).then((files) => {
+      if (files.length === 0) {
+        setProblems(["No photos found in what you dropped."]);
+        setOkCount(0);
+        return;
+      }
+      processFiles(files);
+    });
+  }
+
+  function handleFolderPick(e) {
+    const files = Array.from(e.target.files || []).filter(looksLikeImage).sort(byName);
+    if (files.length === 0) {
+      setProblems(["No photos found in that folder."]);
+      setOkCount(0);
+      return;
+    }
+    processFiles(files);
   }
 
   const busyLabel =
@@ -108,17 +179,38 @@ export default function ImageUpload({
       : "Uploading…";
 
   const openPicker = () => inputRef.current && inputRef.current.click();
+  const openFolder = () => folderRef.current && folderRef.current.click();
+
+  const dragProps = {
+    onDragOver: (e) => {
+      e.preventDefault();
+      setDragOver(true);
+    },
+    onDragLeave: () => setDragOver(false),
+    onDrop: handleDrop,
+  };
 
   return (
-    <div>
+    <div {...dragProps} style={dragOver && !dropzone ? { outline: "2px dashed #999", outlineOffset: 4 } : undefined}>
       <input
         ref={inputRef}
         type="file"
         accept={ACCEPT}
         multiple={multiple}
-        onChange={(e) => processFiles(e.target.files)}
+        onChange={(e) => processFiles(Array.from(e.target.files || []).sort(byName))}
         style={{ display: "none" }}
       />
+      {folderButton && (
+        <input
+          ref={folderRef}
+          type="file"
+          multiple
+          // lets the user pick a whole folder
+          {...{ webkitdirectory: "" }}
+          onChange={handleFolderPick}
+          style={{ display: "none" }}
+        />
+      )}
 
       {dropzone ? (
         <div
@@ -126,25 +218,27 @@ export default function ImageUpload({
           tabIndex={0}
           onClick={() => !busy && openPicker()}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && !busy && openPicker()}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragOver(false);
-            if (!busy) processFiles(e.dataTransfer.files);
-          }}
           className={`border-2 border-dashed rounded-lg px-4 py-8 text-center text-sm cursor-pointer transition-colors ${
             dragOver ? "border-accent bg-accent/10" : "border-border-soft hover:border-accent"
           } ${busy ? "opacity-60 cursor-wait" : ""}`}
         >
-          {busy ? busyLabel : `${label} — click to choose, or drop ${multiple ? "photos" : "a photo"} here`}
+          {busy
+            ? busyLabel
+            : `${label}: click to choose, or drop ${multiple ? "photos or a whole folder" : "a photo"} here`}
         </div>
       ) : (
         <button type="button" className={className} disabled={busy} onClick={openPicker}>
           {busy ? busyLabel : label}
+        </button>
+      )}
+
+      {folderButton && !busy && (
+        <button
+          type="button"
+          onClick={openFolder}
+          className="text-sm underline text-text-body hover:text-charcoal mt-2"
+        >
+          or choose a folder
         </button>
       )}
 
@@ -156,7 +250,11 @@ export default function ImageUpload({
 
       {!busy && problems.length > 0 && (
         <div style={{ color: "crimson", fontSize: 13, marginTop: 6 }}>
-          {okCount > 0 && <p>✓ {okCount} uploaded, but {problems.length} failed:</p>}
+          {okCount > 0 && (
+            <p>
+              ✓ {okCount} uploaded, but {problems.length} failed:
+            </p>
+          )}
           {problems.map((p, i) => (
             <p key={i}>{p}</p>
           ))}

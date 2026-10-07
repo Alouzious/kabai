@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../../lib/api";
 
 const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
+  "https://ai.kab.ac.ug/uploads/kabai/212c7452a8294bb9a643653eb155646e.webp";
 
 function preloadImage(src) {
   return new Promise((resolve) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../lib/api";
 import DataTable from "../components/DataTable";
 import AdminForm from "../components/AdminForm";
@@ -96,9 +96,10 @@ export default function AdminResourcePage({ resourceKey }) {
     }
   }
 
-  const formFields = editingItem
-    ? config.fields.filter((f) => !f.createOnly)
-    : config.fields;
+  const formFields = useMemo(
+    () => (editingItem ? config.fields.filter((f) => !f.createOnly) : config.fields),
+    [editingItem, config.fields]
+  );
 
   // Look up a field's async-select metadata by name, if it has any.
   function asyncFieldFor(name) {
