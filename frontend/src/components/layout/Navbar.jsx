@@ -22,7 +22,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50">
       <div className="hidden md:flex bg-accent text-charcoal px-12 md:px-16 lg:px-20 py-1 items-center justify-between" style={{ minHeight: '30px' }}>
         <div className="flex items-center gap-8 ml-4 md:ml-6">
-          <span className="flex items-center gap-1.5 text-[14px] leading-none text-black" style={{ fontFamily: '"Times New Roman", Times, serif' }}><Mail size={13} /> kabai@email.com</span>
+          <span className="flex items-center gap-1.5 text-[14px] leading-none text-black" style={{ fontFamily: '"Times New Roman", Times, serif' }}><Mail size={13} /> kabai@gmail.com</span>
         </div>
         <span className="text-[14px] leading-none tracking-wide uppercase text-[#0072BB] mr-6 md:mr-8 lg:mr-10" style={{ fontFamily: '"Times New Roman", Times, serif' }}>Kabale University</span>
       </div>

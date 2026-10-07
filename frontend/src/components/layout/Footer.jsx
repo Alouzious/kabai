@@ -42,7 +42,7 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-3 border-b border-accent inline-block pb-1 text-sm sm:text-base">Contact Info</h4>
           <a href="https://www.kab.ac.ug/" target="_blank" rel="noreferrer" className="block text-sm text-white/70 mt-2 hover:text-accent transition">Kabale University, Kabale, Uganda</a>
-          <p className="text-sm text-white/70 mt-1">kabai@email.com</p>
+          <p className="text-sm text-white/70 mt-1">kabai@gmail.com</p>
         </div>
       </div>
 
