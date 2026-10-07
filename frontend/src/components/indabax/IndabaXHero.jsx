@@ -5,16 +5,6 @@ import api from "../../lib/api";
 
 const FALLBACK_SLIDES = [
   {
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1600&auto=format&fit=crop",
-    title: "IndabaX Kabale",
-    subtitle: "The Kabale chapter of the IndabaX Uganda Artificial Intelligence Club a community for discussing, learning and building in ML/AI.",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop",
-    title: "Learn. Build. Share.",
-    subtitle: "Weekly meetings, professor talks, workshops and hands-on project work across disciplines.",
-  },
-  {
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1600&auto=format&fit=crop",
     title: "Powered by Community",
     subtitle: "Proudly affiliated with Deep Learning IndabaX Uganda, part of the pan-African Deep Learning Indaba movement.",
