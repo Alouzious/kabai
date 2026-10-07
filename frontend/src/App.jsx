@@ -1,3 +1,4 @@
+import TeamProfilePage from "./pages/TeamProfilePage";
 import FaviconSwitcher from "./components/FaviconSwitcher";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
@@ -52,6 +53,7 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/team" element={<TeamPage />} />
+            <Route path="/team/:id" element={<TeamProfilePage site="main" />} />
             <Route path="/contact" element={<ContactPage/>} />
           </Route>
 
@@ -61,6 +63,7 @@ function App() {
             <Route path="/indabax/projects" element={<ProjectsPage />} />
             <Route path="/indabax/projects/:slug" element={<ProjectDetailPage />} />
             <Route path="/indabax/team" element={<IndabaXTeamPage />} />
+            <Route path="/indabax/team/:id" element={<TeamProfilePage site="indabax" />} />
             <Route path="/indabax/gallery" element={<IndabaXGalleryPage />} />
             <Route path="/indabax/learning" element={<IndabaXLearningPage />} />
             <Route path="/indabax/join" element={<IndabaXJoinPage />} />

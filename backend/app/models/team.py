@@ -21,5 +21,8 @@ class TeamMember(Base):
     is_alumni_active = Column(Boolean, default=False)
     linkedin_url = Column(String, nullable=True)
     twitter_url = Column(String, nullable=True)
+    github_url = Column(String, nullable=True)
+    instagram_url = Column(String, nullable=True)
+    email = Column(String, nullable=True)
     is_deleted = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

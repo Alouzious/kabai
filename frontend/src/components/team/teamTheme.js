@@ -1,0 +1,26 @@
+export const THEMES = {
+  main: {
+    label: "text-accent",
+    fit: "object-cover object-top",
+    iconBtn: "bg-cream p-3 rounded-full text-charcoal hover:bg-accent hover:text-white transition-colors",
+    primaryBtn: "bg-accent text-white hover:bg-accent-light",
+    ghostBtn: "bg-cream text-charcoal hover:bg-accent hover:text-white",
+    overlay: "bg-charcoal/80",
+    body: "text-charcoal/70",
+    title: "text-charcoal",
+    placeholder: "text-accent/30",
+    back: "text-accent hover:text-accent-light",
+  },
+  indabax: {
+    label: "text-indabax-green",
+    fit: "object-contain",
+    iconBtn: "bg-cream p-3 rounded-full text-indabax-green-dark hover:bg-indabax-green hover:text-black transition-colors",
+    primaryBtn: "bg-indabax-green text-black hover:bg-indabax-black hover:text-white",
+    ghostBtn: "bg-cream text-indabax-green-dark hover:bg-indabax-green hover:text-black",
+    overlay: "bg-indabax-black/80",
+    body: "text-black/70",
+    title: "text-black",
+    placeholder: "text-indabax-green/30",
+    back: "text-indabax-green hover:text-indabax-green-dark",
+  },
+};

@@ -21,6 +21,14 @@ def list_team(
     return crud.get_team_members(db, site=site, year=year, skip=skip, limit=limit)
 
 
+@router.get("/{member_id}", response_model=TeamMemberOut)
+def get_member(member_id: uuid.UUID, db: Session = Depends(get_db)):
+    member = crud.get_team_member(db, member_id)
+    if not member or member.is_deleted:
+        raise HTTPException(status_code=404, detail="Team member not found")
+    return member
+
+
 @router.post("/", response_model=TeamMemberOut)
 def create_member(
     member_in: TeamMemberCreate, db: Session = Depends(get_db), _user=Depends(get_current_super_admin)

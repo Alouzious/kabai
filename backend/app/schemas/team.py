@@ -14,6 +14,9 @@ class TeamMemberBase(BaseModel):
     year: int
     linkedin_url: Optional[str] = None
     twitter_url: Optional[str] = None
+    github_url: Optional[str] = None
+    instagram_url: Optional[str] = None
+    email: Optional[str] = None
     is_alumni_active: bool = False
 
 
@@ -29,6 +32,11 @@ class TeamMemberUpdate(BaseModel):
     year: Optional[int] = None
     is_current: Optional[bool] = None
     is_alumni_active: Optional[bool] = None
+    linkedin_url: Optional[str] = None
+    twitter_url: Optional[str] = None
+    github_url: Optional[str] = None
+    instagram_url: Optional[str] = None
+    email: Optional[str] = None
 
 
 class TeamMemberOut(TeamMemberBase):

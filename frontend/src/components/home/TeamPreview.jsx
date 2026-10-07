@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaLinkedin, FaTwitter } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
+import TeamMemberModal from "../team/TeamMemberModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -15,9 +16,11 @@ const fadeUp = {
 
 export default function TeamPreview() {
   const [team, setTeam] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    api.get("/team/", { params: { site: "main" } })
+    api
+      .get("/team/", { params: { site: "main" } })
       .then((res) => setTeam(res.data.filter((m) => m.is_current)))
       .catch(() => setTeam([]));
   }, []);
@@ -32,7 +35,6 @@ export default function TeamPreview() {
           variants={fadeUp}
           className="text-center mb-14"
         >
-          <p className="text-accent font-semibold tracking-widest text-sm mb-3">OUR TEAM</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold">Current Leadership</h2>
         </motion.div>
 
@@ -41,42 +43,36 @@ export default function TeamPreview() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {team.map((m, i) => (
-              <motion.div
+              <motion.button
+                type="button"
                 key={m.id}
+                onClick={() => setSelected(m)}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.3 }}
                 custom={i * 0.12}
                 variants={fadeUp}
                 whileHover={{ y: -6 }}
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
+                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 text-left w-full"
               >
-                <div className="h-56 overflow-hidden bg-cream-dark">
-                  {m.photo_url && (
+                <div className="h-56 overflow-hidden">
+                  {m.photo_url ? (
                     <img
                       src={m.photo_url}
                       alt={m.name}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-accent/30">
+                      <FaCircleUser size={72} />
+                    </div>
                   )}
                 </div>
                 <div className="p-5 text-center">
                   <h3 className="font-semibold text-lg">{m.name}</h3>
-                  <p className="text-accent text-sm mb-3">{m.role}</p>
-                  <div className="flex justify-center gap-2">
-                    {m.linkedin_url && (
-                      <a href={m.linkedin_url} target="_blank" rel="noreferrer" className="bg-cream p-2 rounded-full text-charcoal hover:bg-accent hover:text-white transition-colors">
-                        <FaLinkedin size={16} />
-                      </a>
-                    )}
-                    {m.twitter_url && (
-                      <a href={m.twitter_url} target="_blank" rel="noreferrer" className="bg-cream p-2 rounded-full text-charcoal hover:bg-accent hover:text-white transition-colors">
-                        <FaTwitter size={16} />
-                      </a>
-                    )}
-                  </div>
+                  <p className="text-accent text-sm">{m.role}</p>
                 </div>
-              </motion.div>
+              </motion.button>
             ))}
           </div>
         )}
@@ -87,6 +83,8 @@ export default function TeamPreview() {
           </Link>
         </div>
       </div>
+
+      {selected && <TeamMemberModal member={selected} site="main" onClose={() => setSelected(null)} />}
     </section>
   );
 }
