@@ -18,28 +18,26 @@ export default function TeamCard({ member: m, site = "main", index = 0 }) {
     return (
       <Link
         to={to}
-        className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 text-left w-full border border-transparent hover:border-indabax-green/40 hover:-translate-y-1"
+        className="group block h-full bg-white rounded-2xl shadow-sm hover:shadow-xl border border-transparent hover:border-indabax-green/40 hover:-translate-y-1 transition-all duration-300 px-4 py-7 text-center"
       >
-        <div className="h-64 overflow-hidden">
+        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 mx-auto rounded-full overflow-hidden ring-4 ring-black/5 group-hover:ring-indabax-green/40 shadow-md bg-white transition-all duration-300">
           {m.photo_url ? (
             <img
               src={m.photo_url}
               alt={m.name}
-              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-indabax-green/30">
-              <FaCircleUser size={72} />
+              <FaCircleUser size={96} />
             </div>
           )}
         </div>
-        <div className="p-5 text-center">
-          <h3 className="font-semibold text-lg text-black">{m.name}</h3>
-          <span className="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-1 bg-indabax-green/10 text-indabax-green-dark group-hover:bg-indabax-green group-hover:text-black transition-colors">
-            {m.role}
-          </span>
-          {!m.is_current && <p className="text-xs text-black/50">Alumni · {m.year}</p>}
-        </div>
+        <h3 className="mt-5 font-semibold text-lg text-black leading-snug">{m.name}</h3>
+        <span className="inline-block mt-2 px-4 py-1.5 rounded-full text-sm font-bold bg-indabax-green/10 text-indabax-green-dark group-hover:bg-indabax-green group-hover:text-black transition-colors">
+          {m.role}
+        </span>
+        {!m.is_current && <p className="text-xs text-black/50 mt-2">Alumni · {m.year}</p>}
       </Link>
     );
   }

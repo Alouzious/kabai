@@ -4,7 +4,8 @@ import api from "../../lib/api";
 import TeamCard from "../team/TeamCard";
 import { sortByRole } from "../team/roles";
 
-const HOME_LIMIT = 4; // how many leaders show on the home page
+// Exactly these roles show on the home page (spelled as in the admin)
+const HOME_ROLES = ["Community Patron", "Club President", "Vice President", "Technical Lead"];
 
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
@@ -12,7 +13,9 @@ export default function IndabaXTeamPreview() {
   useEffect(() => {
     api
       .get("/team/", { params: { site: "indabax" } })
-      .then((r) => setTeam(sortByRole(r.data.filter((m) => m.is_current)).slice(0, HOME_LIMIT)))
+      .then((r) =>
+        setTeam(sortByRole(r.data.filter((m) => m.is_current && HOME_ROLES.includes(m.role))))
+      )
       .catch(() => {});
   }, []);
 
@@ -25,9 +28,11 @@ export default function IndabaXTeamPreview() {
       {team.length === 0 ? (
         <p className="text-center text-[--color-text-body]">Team information coming soon.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="flex flex-wrap justify-center gap-8">
           {team.map((m) => (
-            <TeamCard key={m.id} member={m} site="indabax" />
+            <div key={m.id} className="w-[calc(50%-1rem)] md:w-[calc(25%-1.5rem)]">
+              <TeamCard member={m} site="indabax" />
+            </div>
           ))}
         </div>
       )}
