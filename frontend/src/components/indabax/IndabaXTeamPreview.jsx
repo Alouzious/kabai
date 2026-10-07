@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
-import TeamMemberModal from "../team/TeamMemberModal";
+import TeamCard from "../team/TeamCard";
 import { sortByRole } from "../team/roles";
 
 const HOME_LIMIT = 4; // how many leaders show on the home page
 
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
-  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     api
@@ -29,32 +27,7 @@ export default function IndabaXTeamPreview() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {team.map((m) => (
-            <button
-              type="button"
-              key={m.id}
-              onClick={() => setSelected(m)}
-              className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 text-left w-full border border-transparent hover:border-indabax-green/40 hover:-translate-y-1"
-            >
-              <div className="h-64 overflow-hidden">
-                {m.photo_url ? (
-                  <img
-                    src={m.photo_url}
-                    alt={m.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-indabax-green/30">
-                    <FaCircleUser size={72} />
-                  </div>
-                )}
-              </div>
-              <div className="p-5 text-center">
-                <h3 className="font-semibold text-lg text-black">{m.name}</h3>
-                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-3 bg-indabax-green/10 text-indabax-green-dark group-hover:bg-indabax-green group-hover:text-black transition-colors">
-                  {m.role}
-                </span>
-              </div>
-            </button>
+            <TeamCard key={m.id} member={m} site="indabax" />
           ))}
         </div>
       )}
@@ -67,8 +40,6 @@ export default function IndabaXTeamPreview() {
           Meet the full team
         </Link>
       </div>
-
-      {selected && <TeamMemberModal member={selected} site="indabax" onClose={() => setSelected(null)} />}
     </section>
   );
 }

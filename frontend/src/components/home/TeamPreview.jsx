@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaCircleUser } from "react-icons/fa6";
 import api from "../../lib/api";
-import TeamMemberModal from "../team/TeamMemberModal";
+import TeamCard from "../team/TeamCard";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -16,7 +15,6 @@ const fadeUp = {
 
 export default function TeamPreview() {
   const [team, setTeam] = useState([]);
-  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     api
@@ -43,36 +41,7 @@ export default function TeamPreview() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {team.map((m, i) => (
-              <motion.button
-                type="button"
-                key={m.id}
-                onClick={() => setSelected(m)}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
-                custom={i * 0.12}
-                variants={fadeUp}
-                whileHover={{ y: -6 }}
-                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 text-left w-full"
-              >
-                <div className="h-56 overflow-hidden">
-                  {m.photo_url ? (
-                    <img
-                      src={m.photo_url}
-                      alt={m.name}
-                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-accent/30">
-                      <FaCircleUser size={72} />
-                    </div>
-                  )}
-                </div>
-                <div className="p-5 text-center">
-                  <h3 className="font-semibold text-lg">{m.name}</h3>
-                  <p className="text-accent text-sm">{m.role}</p>
-                </div>
-              </motion.button>
+              <TeamCard key={m.id} member={m} site="main" index={i} />
             ))}
           </div>
         )}
@@ -83,8 +52,6 @@ export default function TeamPreview() {
           </Link>
         </div>
       </div>
-
-      {selected && <TeamMemberModal member={selected} site="main" onClose={() => setSelected(null)} />}
     </section>
   );
 }
