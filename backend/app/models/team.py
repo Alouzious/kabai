@@ -15,6 +15,7 @@ class TeamMember(Base):
     name = Column(String, nullable=False)
     role = Column(String, nullable=False)
     bio = Column(Text)
+    short_bio = Column(Text, nullable=True)
     photo_url = Column(String)
     year = Column(Integer, nullable=False)
     is_current = Column(Boolean, default=True)

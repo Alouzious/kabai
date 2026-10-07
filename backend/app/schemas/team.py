@@ -10,6 +10,7 @@ class TeamMemberBase(BaseModel):
     name: str
     role: str
     bio: Optional[str] = None
+    short_bio: Optional[str] = None
     photo_url: Optional[str] = None
     year: int
     linkedin_url: Optional[str] = None
@@ -28,6 +29,7 @@ class TeamMemberUpdate(BaseModel):
     name: Optional[str] = None
     role: Optional[str] = None
     bio: Optional[str] = None
+    short_bio: Optional[str] = None
     photo_url: Optional[str] = None
     year: Optional[int] = None
     is_current: Optional[bool] = None
