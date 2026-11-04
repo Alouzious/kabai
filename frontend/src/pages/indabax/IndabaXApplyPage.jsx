@@ -2,10 +2,9 @@ import { useState } from "react";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "../../lib/api";
+import { useSetting } from "../../lib/useSetting";
 
 // ---- Edit these to change the page. No backend change is needed. ----
-const APPLICATIONS_OPEN = true;
-
 const POSITIONS = [
   "Club President",
   "Vice President",
@@ -52,6 +51,7 @@ const inputClass =
 const labelClass = "text-sm font-semibold block mb-1.5 text-black";
 
 export default function IndabaXApplyPage() {
+  const openSetting = useSetting("indabax_applications_open");
   const [form, setForm] = useState({
     name: "",
     position: "",
@@ -80,7 +80,8 @@ export default function IndabaXApplyPage() {
       setSent(true);
     } catch (err) {
       const code = err.response?.status;
-      if (code === 429) setError("Too many attempts. Please wait a minute and try again.");
+      if (code === 403) setError("Applications are closed right now.");
+      else if (code === 429) setError("Too many attempts. Please wait a minute and try again.");
       else if (code === 422) setError("Please check your answers: the phone number and your reason need a little more detail.");
       else setError("Something went wrong. Please try again in a moment.");
     } finally {
@@ -109,7 +110,9 @@ export default function IndabaXApplyPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-6 pb-24">
-        {!APPLICATIONS_OPEN ? (
+        {openSetting === null ? (
+          <p className="text-center text-black/60">Loading…</p>
+        ) : openSetting !== "true" ? (
           <div className="bg-white/40 backdrop-blur-xl border border-white/60 rounded-2xl p-8 text-center shadow-xl">
             <p className="font-semibold text-lg mb-1 text-black">Applications are closed</p>
             <p className="text-black/70 text-sm">Follow our channels to hear about the next call.</p>

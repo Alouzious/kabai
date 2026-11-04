@@ -20,6 +20,8 @@ export default function AdminApplications() {
   const [statusFilter, setStatusFilter] = useState("");
   const [positionFilter, setPositionFilter] = useState("");
   const [openId, setOpenId] = useState(null);
+  const [callOpen, setCallOpen] = useState(null);
+  const [toggling, setToggling] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -36,7 +38,24 @@ export default function AdminApplications() {
 
   useEffect(() => {
     load();
+    api
+      .get("/settings/")
+      .then((r) => setCallOpen(r.data.indabax_applications_open === "true"))
+      .catch(() => setCallOpen(false));
   }, []);
+
+  async function toggleCall() {
+    setToggling(true);
+    try {
+      const next = !callOpen;
+      await api.put("/settings/indabax_applications_open", { value: next ? "true" : "false" });
+      setCallOpen(next);
+    } catch (err) {
+      alert(err.response?.data?.detail || "Could not change the setting.");
+    } finally {
+      setToggling(false);
+    }
+  }
 
   const positions = useMemo(() => [...new Set(items.map((i) => i.position))].sort(), [items]);
   const shown = items.filter(
@@ -98,6 +117,24 @@ export default function AdminApplications() {
           className="bg-accent hover:bg-accent-light text-charcoal font-semibold text-sm rounded-md px-4 py-2 transition-colors self-start sm:self-auto disabled:opacity-50"
         >
           Download spreadsheet (CSV)
+        </button>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border-soft bg-cream-dark/30 px-4 py-3">
+        <div>
+          <p className="font-semibold text-charcoal text-sm">
+            Applications are {callOpen === null ? "..." : callOpen ? "OPEN" : "CLOSED"}
+          </p>
+          <p className="text-xs text-text-body/70">
+            Open: the Apply button shows on the IndabaX site and the form accepts applications. Closed: the button is hidden and the form refuses applications.
+          </p>
+        </div>
+        <button
+          onClick={toggleCall}
+          disabled={callOpen === null || toggling}
+          className="bg-accent hover:bg-accent-light text-charcoal font-semibold text-sm rounded-md px-4 py-2 transition-colors disabled:opacity-60"
+        >
+          {toggling ? "Saving..." : callOpen ? "Close applications" : "Open applications"}
         </button>
       </div>
 

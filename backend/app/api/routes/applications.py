@@ -8,6 +8,7 @@ from app.api.deps import get_current_super_admin
 from app.core.limiter import limiter
 from app.db.session import get_db
 from app.models.application import LeadershipApplication
+from app.models.site_setting import SiteSetting
 from app.schemas.application import ApplicationIn, ApplicationOut, ApplicationStatusUpdate
 
 router = APIRouter(prefix="/api/v1/applications", tags=["applications"])
@@ -16,6 +17,9 @@ router = APIRouter(prefix="/api/v1/applications", tags=["applications"])
 @router.post("/")
 @limiter.limit("10/minute")
 def submit_application(request: Request, data: ApplicationIn, db: Session = Depends(get_db)):
+    setting = db.query(SiteSetting).get("indabax_applications_open")
+    if not setting or setting.value != "true":
+        raise HTTPException(status_code=403, detail="Applications are closed")
     row = LeadershipApplication(**data.model_dump())
     db.add(row)
     db.commit()

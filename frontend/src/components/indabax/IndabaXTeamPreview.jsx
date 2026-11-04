@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import api from "../../lib/api";
 import TeamCard from "../team/TeamCard";
 import { sortByRole } from "../team/roles";
+import { useSetting } from "../../lib/useSetting";
 
 // Exactly these roles show on the home page (spelled as in the admin)
 const HOME_ROLES = ["Community Patron", "Club President", "Vice President", "Technical Lead"];
 
 export default function IndabaXTeamPreview() {
   const [team, setTeam] = useState([]);
+  const applicationsOpen = useSetting("indabax_applications_open") === "true";
 
   useEffect(() => {
     api
@@ -44,14 +46,16 @@ export default function IndabaXTeamPreview() {
         >
           Meet the full team
         </Link>
-        <div className="mt-6">
-          <Link
-            to="/indabax/apply"
-            className="inline-block bg-indabax-green text-black font-bold px-6 py-3 rounded-full hover:bg-indabax-green-dark hover:text-white transition"
-          >
-            Apply for leadership
-          </Link>
-        </div>
+        {applicationsOpen && (
+          <div className="mt-6">
+            <Link
+              to="/indabax/apply"
+              className="inline-block bg-indabax-green text-black font-bold px-6 py-3 rounded-full hover:bg-indabax-green-dark hover:text-white transition"
+            >
+              Apply for leadership
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
