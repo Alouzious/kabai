@@ -1,3 +1,5 @@
+import IndabaXApplyPage from "./pages/indabax/IndabaXApplyPage";
+import AdminApplications from "./admin/pages/AdminApplications";
 import TeamProfilePage from "./pages/TeamProfilePage";
 import FaviconSwitcher from "./components/FaviconSwitcher";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -67,6 +69,7 @@ function App() {
             <Route path="/indabax/gallery" element={<IndabaXGalleryPage />} />
             <Route path="/indabax/learning" element={<IndabaXLearningPage />} />
             <Route path="/indabax/join" element={<IndabaXJoinPage />} />
+            <Route path="/indabax/apply" element={<IndabaXApplyPage />} />
           </Route>
 
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -82,6 +85,7 @@ function App() {
             <Route path="team" element={<AdminTeam />} />
             <Route path="research" element={<AdminResearch />} />
             <Route path="partners" element={<AdminPartners />} />
+            <Route path="applications" element={<AdminApplications />} />
           </Route>
         </Routes>
       </AuthProvider>

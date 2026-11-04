@@ -44,6 +44,14 @@ export default function IndabaXTeamPreview() {
         >
           Meet the full team
         </Link>
+        <div className="mt-6">
+          <Link
+            to="/indabax/apply"
+            className="inline-block bg-indabax-green text-black font-bold px-6 py-3 rounded-full hover:bg-indabax-green-dark hover:text-white transition"
+          >
+            Apply for leadership
+          </Link>
+        </div>
       </div>
     </section>
   );

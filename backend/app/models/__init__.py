@@ -12,3 +12,4 @@ from app.models.slide import Slide
 from app.models.core_value import CoreValue
 from app.models.blog_post import BlogPost
 from app.models.membership import MembershipRequest
+from app.models.application import LeadershipApplication  # noqa
