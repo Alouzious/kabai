@@ -1,23 +1,32 @@
-import { useState } from "react";
-import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Send, CheckCircle2, Loader2, Info } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "../../lib/api";
 import { useSetting } from "../../lib/useSetting";
 
+const KAB_EMAIL_SUFFIX = "@kab.ac.ug";
+const KAB_EMAIL_PATTERN = /^[^\s@]+@kab\.ac\.ug$/i;
+
 // ---- Edit these to change the page. No backend change is needed. ----
-const POSITIONS = [
+const OPEN_TO_EVERY_YEAR = [
+  "Year One Representative",
+  "Secretary",
+  "Treasurer",
+  "Event Planner",
+  "Graphic Designer",
+];
+
+const YEAR_2_AND_ABOVE = [
   "Club President",
   "Vice President",
-  "Secretary",
   "Technical Lead",
   "Speaker",
   "Women Lead",
   "Social Media Lead",
-  "Graphic Designer",
-  "Event Planner",
   "Year Two Representative",
-  "Other",
 ];
+
+const POSITIONS = [...OPEN_TO_EVERY_YEAR, ...YEAR_2_AND_ABOVE];
 
 const FACULTIES = [
   "Faculty of Computing, Library and Information Science",
@@ -36,6 +45,21 @@ const FACULTIES = [
 
 const YEARS = ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Postgraduate"];
 // ---------------------------------------------------------------------
+
+function isYearOne(year) {
+  return year === "Year 1";
+}
+
+function isEligibleForPosition(year, position) {
+  if (!year || !position) return true;
+  if (OPEN_TO_EVERY_YEAR.includes(position)) return true;
+  if (YEAR_2_AND_ABOVE.includes(position)) return !isYearOne(year);
+  return true;
+}
+
+function isKabEmail(value) {
+  return KAB_EMAIL_PATTERN.test(value.trim());
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -64,26 +88,70 @@ export default function IndabaXApplyPage() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const availablePositions = useMemo(() => {
+    if (!form.year_of_study) return POSITIONS;
+    if (isYearOne(form.year_of_study)) return OPEN_TO_EVERY_YEAR;
+    return POSITIONS;
+  }, [form.year_of_study]);
+
+  const emailValid = !form.email.trim() || isKabEmail(form.email);
+  const emailError =
+    emailTouched && form.email.trim() && !isKabEmail(form.email)
+      ? `Use your Kabale University email ending with ${KAB_EMAIL_SUFFIX}`
+      : "";
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => {
+      const next = { ...prev, [name]: value };
+      if (
+        name === "year_of_study" &&
+        next.position &&
+        !isEligibleForPosition(value, next.position)
+      ) {
+        next.position = "";
+      }
+      return next;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    setEmailTouched(true);
     setError("");
+
+    if (!form.year_of_study) {
+      setError("Please select your year of study so we can show the posts you are eligible for.");
+      return;
+    }
+    if (!isKabEmail(form.email)) {
+      setError(`Applications must use your Kabale University email ending with ${KAB_EMAIL_SUFFIX}.`);
+      return;
+    }
+    if (!isEligibleForPosition(form.year_of_study, form.position)) {
+      setError("You are not eligible for that post based on your year of study. Choose an eligible position.");
+      return;
+    }
+
+    setSubmitting(true);
     try {
       await api.post("/applications/", {
         ...form,
-        year_of_study: form.year_of_study || null,
-        email: form.email.trim() || null,
+        year_of_study: form.year_of_study,
+        email: form.email.trim().toLowerCase(),
       });
       setSent(true);
     } catch (err) {
       const code = err.response?.status;
+      const detail = err.response?.data?.detail;
       if (code === 403) setError("Applications are closed right now.");
       else if (code === 429) setError("Too many attempts. Please wait a minute and try again.");
-      else if (code === 422) setError("Please check your answers: the phone number and your reason need a little more detail.");
-      else setError("Something went wrong. Please try again in a moment.");
+      else if (code === 422) {
+        if (typeof detail === "string") setError(detail);
+        else setError("Please check your answers: use your KAB email, and make sure your phone and reason have enough detail.");
+      } else setError("Something went wrong. Please try again in a moment.");
     } finally {
       setSubmitting(false);
     }
@@ -103,8 +171,8 @@ export default function IndabaXApplyPage() {
             Apply for Leadership
           </h1>
           <p className="text-black/70 max-w-xl mx-auto text-lg">
-            Want to help lead IndabaX Kabale? Tell us who you are, the position you are
-            interested in and why you want to lead.
+            Want to help lead IndabaX Kabale? Check eligibility for your year, then tell us
+            who you are and why you want to lead.
           </p>
         </motion.div>
       </div>
@@ -132,8 +200,64 @@ export default function IndabaXApplyPage() {
             animate="visible"
             custom={0.1}
             variants={fadeUp}
-            className="space-y-4 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl p-6 md:p-8"
+            className="space-y-5 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl p-6 md:p-8"
           >
+            <div className="rounded-xl border border-indabax-green/40 bg-indabax-green/10 p-4 md:p-5">
+              <div className="flex items-start gap-3 mb-3">
+                <Info className="text-indabax-green-dark shrink-0 mt-0.5" size={18} />
+                <div>
+                  <p className="font-semibold text-black text-sm md:text-base">
+                    Read this before you apply
+                  </p>
+                  <p className="text-black/70 text-sm mt-1 leading-relaxed">
+                    Not every post is open to every student. Check your year of study below,
+                    then choose a post you are eligible for. Applications for a post you are
+                    not eligible for will not be considered.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                <div className="rounded-lg bg-white/50 border border-white/70 p-3.5">
+                  <p className="text-xs font-bold uppercase tracking-wide text-indabax-green-dark mb-2">
+                    Open to every year
+                  </p>
+                  <p className="text-xs text-black/60 mb-2">Students in any year can apply for:</p>
+                  <ul className="space-y-1 text-sm text-black/80">
+                    {OPEN_TO_EVERY_YEAR.map((p) => (
+                      <li key={p} className="flex gap-2">
+                        <span className="text-indabax-green-dark">·</span>
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-lg bg-white/50 border border-white/70 p-3.5">
+                  <p className="text-xs font-bold uppercase tracking-wide text-indabax-green-dark mb-2">
+                    Year 2 and above
+                  </p>
+                  <p className="text-xs text-black/60 mb-2">Only students in Year 2 or higher can apply for:</p>
+                  <ul className="space-y-1 text-sm text-black/80">
+                    {YEAR_2_AND_ABOVE.map((p) => (
+                      <li key={p} className="flex gap-2">
+                        <span className="text-indabax-green-dark">·</span>
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <p className="text-sm text-black mt-4 leading-relaxed border-t border-indabax-green/25 pt-3">
+                Use your <span className="font-semibold">Kabale University email</span> only
+                — it must end with{" "}
+                <code className="font-mono text-sm bg-white/70 px-1.5 py-0.5 rounded border border-white/80">
+                  {KAB_EMAIL_SUFFIX}
+                </code>
+                . Other email addresses will not be accepted.
+              </p>
+            </div>
+
             <div>
               <label className={labelClass}>Full name *</label>
               <input type="text" name="name" required minLength={2} value={form.name} onChange={handleChange} className={inputClass} placeholder="Your full name" />
@@ -141,22 +265,36 @@ export default function IndabaXApplyPage() {
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>Position you are applying for *</label>
-                <select name="position" required value={form.position} onChange={handleChange} className={inputClass}>
-                  <option value="">Choose a position</option>
-                  {POSITIONS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className={labelClass}>Year of study</label>
-                <select name="year_of_study" value={form.year_of_study} onChange={handleChange} className={inputClass}>
+                <label className={labelClass}>Year of study *</label>
+                <select name="year_of_study" required value={form.year_of_study} onChange={handleChange} className={inputClass}>
                   <option value="">Choose your year</option>
                   {YEARS.map((y) => (
                     <option key={y} value={y}>{y}</option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <label className={labelClass}>Position you are applying for *</label>
+                <select
+                  name="position"
+                  required
+                  value={form.position}
+                  onChange={handleChange}
+                  className={inputClass}
+                  disabled={!form.year_of_study}
+                >
+                  <option value="">
+                    {form.year_of_study ? "Choose a position" : "Select your year first"}
+                  </option>
+                  {availablePositions.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                {form.year_of_study && isYearOne(form.year_of_study) && (
+                  <p className="text-xs text-black/55 mt-1.5">
+                    Year 1 students can only apply for posts open to every year.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -176,8 +314,28 @@ export default function IndabaXApplyPage() {
                 <input type="tel" name="phone" required minLength={7} value={form.phone} onChange={handleChange} className={inputClass} placeholder="e.g. 0700 000 000" />
               </div>
               <div>
-                <label className={labelClass}>Email (optional)</label>
-                <input type="email" name="email" value={form.email} onChange={handleChange} className={inputClass} placeholder="you@example.com" />
+                <label className={labelClass}>KAB email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={form.email}
+                  onChange={handleChange}
+                  onBlur={() => setEmailTouched(true)}
+                  pattern="[^@\s]+@kab\.ac\.ug"
+                  title={`Must end with ${KAB_EMAIL_SUFFIX}`}
+                  className={`${inputClass} ${emailError ? "border-red-400 focus:border-red-500" : ""}`}
+                  placeholder={`name${KAB_EMAIL_SUFFIX}`}
+                  autoComplete="email"
+                  inputMode="email"
+                />
+                {emailError ? (
+                  <p className="text-xs text-red-600 mt-1.5">{emailError}</p>
+                ) : (
+                  <p className="text-xs text-black/55 mt-1.5">
+                    Must end with <span className="font-mono">{KAB_EMAIL_SUFFIX}</span>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -189,7 +347,11 @@ export default function IndabaXApplyPage() {
 
             {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            <button type="submit" disabled={submitting} className="flex items-center justify-center gap-2 bg-indabax-green text-black px-6 py-3 rounded-full font-bold hover:bg-indabax-green-dark hover:text-white transition w-full disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={submitting || (emailTouched && !emailValid)}
+              className="flex items-center justify-center gap-2 bg-indabax-green text-black px-6 py-3 rounded-full font-bold hover:bg-indabax-green-dark hover:text-white transition w-full disabled:opacity-60"
+            >
               {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
               {submitting ? "Submitting..." : "Submit application"}
             </button>
