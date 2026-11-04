@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ArrowLeft } from "lucide-react";
+import { useSetting } from "../../lib/useSetting";
 
 export default function IndabaXNavbar() {
   const [open, setOpen] = useState(false);
+  const applicationsOpen = useSetting("indabax_applications_open") === "true";
 
   return (
     <header className="bg-indabax-black text-white sticky top-0 z-50 border-b border-indabax-green/20">
@@ -35,6 +37,9 @@ export default function IndabaXNavbar() {
           <Link to="/indabax/team" className="hover:text-indabax-green transition">Team</Link>
           <Link to="/indabax/gallery" className="hover:text-indabax-green transition">Gallery</Link>
           <Link to="/indabax/learning" className="hover:text-indabax-green transition">Learning</Link>
+          {applicationsOpen && (
+            <Link to="/indabax/apply" className="text-indabax-green hover:text-white transition">Apply</Link>
+          )}
           <Link to="/indabax/join" className="bg-indabax-green text-indabax-black px-5 py-2.5 rounded-full font-bold hover:bg-white transition">
             Join Us
           </Link>
@@ -65,6 +70,9 @@ export default function IndabaXNavbar() {
           <Link to="/indabax/team" onClick={() => setOpen(false)}>Team</Link>
           <Link to="/indabax/gallery" onClick={() => setOpen(false)}>Gallery</Link>
           <Link to="/indabax/learning" onClick={() => setOpen(false)}>Learning</Link>
+          {applicationsOpen && (
+            <Link to="/indabax/apply" onClick={() => setOpen(false)} className="text-indabax-green">Apply to Lead</Link>
+          )}
           <Link to="/indabax/join" onClick={() => setOpen(false)} className="text-indabax-green">Join Us</Link>
         </div>
       )}

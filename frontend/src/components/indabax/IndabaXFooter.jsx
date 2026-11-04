@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useSetting } from "../../lib/useSetting";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 export default function IndabaXFooter() {
+  const applicationsOpen = useSetting("indabax_applications_open") === "true";
   return (
     <footer className="bg-indabax-black text-white pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center sm:text-left items-start justify-items-center sm:justify-items-start">
@@ -34,6 +36,9 @@ export default function IndabaXFooter() {
             <li><Link to="/indabax/about" className="hover:text-indabax-green">About</Link></li>
             <li><Link to="/indabax/team" className="hover:text-indabax-green">Team</Link></li>
             <li><Link to="/indabax/gallery" className="hover:text-indabax-green">Gallery</Link></li>
+            {applicationsOpen && (
+              <li><Link to="/indabax/apply" className="hover:text-indabax-green">Apply for leadership</Link></li>
+            )}
           </ul>
         </div>
 
