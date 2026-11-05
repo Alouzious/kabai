@@ -6,7 +6,7 @@ export const INDABAX_ROLE_ORDER = [
   "Secretary",
   "Technical Lead",
   "Year Two Representative",
-  "Women Lead",
+  "Women In Tech",
   "Social Media Lead",
   "Graphic Designer",
   "Event Planner",

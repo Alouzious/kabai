@@ -6,15 +6,15 @@ const OPEN_TO_EVERY_YEAR = [
   "Treasurer",
   "Event Planner",
   "Graphic Designer",
+  "Speaker",
+  "Social Media Lead",
 ];
 
 const YEAR_2_AND_ABOVE = [
   "Club President",
   "Vice President",
   "Technical Lead",
-  "Speaker",
-  "Women Lead",
-  "Social Media Lead",
+  "Women In Tech",
   "Year Two Representative",
 ];
 
