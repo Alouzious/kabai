@@ -1,5 +1,6 @@
 from app.api.routes.applications import router as applications_router
 from app.api.routes.settings import router as settings_router
+from app.api.routes.campaign_resources import router as campaign_resources_router
 import logging
 
 from fastapi import FastAPI, Request
@@ -103,6 +104,7 @@ app.include_router(blog.router)
 app.include_router(membership.router)
 app.include_router(applications_router)
 app.include_router(settings_router)
+app.include_router(campaign_resources_router)
 
 
 @app.on_event("startup")

@@ -10,9 +10,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     ALLOWED_ORIGINS: str = "http://localhost:5173"
 
-    CLOUDINARY_CLOUD_NAME: str
-    CLOUDINARY_API_KEY: str
-    CLOUDINARY_API_SECRET: str
+    # Optional leftovers — uploads use local disk (UPLOAD_DIR), not Cloudinary.
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
 
     UPLOAD_DIR: str = "uploads"
     UPLOAD_BASE_URL: str = "/uploads"

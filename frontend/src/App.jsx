@@ -1,5 +1,6 @@
 import IndabaXApplyPage from "./pages/indabax/IndabaXApplyPage";
 import AdminApplications from "./admin/pages/AdminApplications";
+import AdminResources from "./admin/pages/AdminResources";
 import TeamProfilePage from "./pages/TeamProfilePage";
 import FaviconSwitcher from "./components/FaviconSwitcher";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -86,6 +87,7 @@ function App() {
             <Route path="research" element={<AdminResearch />} />
             <Route path="partners" element={<AdminPartners />} />
             <Route path="applications" element={<AdminApplications />} />
+            <Route path="resources" element={<AdminResources />} />
           </Route>
         </Routes>
       </AuthProvider>
